@@ -1,0 +1,82 @@
+/* Toggle button (hamburger menu) */
+.sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    border: 1px solid #ffffff;
+    color: white;
+    padding: 10px 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1001;
+    background: #00000000;
+}
+
+.sidebar-toggle:hover {
+    color: #3367d6;
+    border-color: #3367d6; 
+}
+
+/* The sidebar itself */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -100vw; /* Hidden by default */
+    width: 20vw;
+    height: 100vh;
+    border: 1px solid #8f8f8f;
+    box-shadow: 2px 0 10px #8f8f8f1a;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    padding: 20px;
+    text-align: left;
+}
+
+/* When sidebar is open */
+.sidebar.open {
+    left: 0; /* Slide in */
+}
+
+/* Sidebar content */
+.sidebar h3 {
+    margin-top: 50px;
+    color: #ffffff;
+    border-bottom: 2px solid #8f8f8f;
+    padding-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.sidebar li {
+    margin: 15px 0;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.sidebar a:hover {
+    background: #f0f0f0;
+}
+
+/* Dark overlay when sidebar is open */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
