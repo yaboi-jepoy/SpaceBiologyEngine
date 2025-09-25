@@ -1,36 +1,101 @@
-.search-container {
-    text-align: center;
-    margin: 20px;
+.search-clear-btn {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    z-index: 2;
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: c;
 }
 
-.search-input {
-    padding: 12px;
-    font-size: 16px;
-    width: 400px;
-    border: 2px solid #8f8f8f;
-    border-radius: 16px 0 0 16px;
-    outline: none;
+.search-clear-btn svg {
+    display: block;
 }
+
+.search-container {
+    text-align: center;
+    margin: 40px auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 500px;
+    max-width: 90vw;
+}
+
+
+.search-input {
+    padding: 14px 20px;
+    font-size: 18px;
+    width: 100%;
+    border: 2px solid #8f8f8f;
+    border-radius: 24px;
+    outline: none;
+    box-sizing: border-box;
+    background: #fff;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
 
 .search-input:focus, .search-input:hover {
     border-color: #4285f4;
-    box-shadow: 0 0 5px rgba(66, 133, 244, 0.3);
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.15);
 }
+
 
 .search-button {
-    margin-left: 2px;
-    padding: 12px 20px;
-    font-size: 16px;
-    background-color: rgb(66, 133, 244);
-    color: white;
-    border: none;
-    border-radius: 0 16px 16px 0;
-    cursor: pointer;
+    display: none;
 }
 
-.search-button:hover {
-    background-color: #3367d6;
+.search-results {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 4px 24px rgba(60,64,67,0.15);
+    z-index: 10;
+    max-height: 350px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+}
+
+.search-results ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.search-results li {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.15s;
+}
+
+.search-results li:hover {
+    background: #f1f3f4;
+}
+
+.search-results a {
+    color: #1a0dab;
+    text-decoration: none;
+    font-weight: 500;
+    flex: 1;
+}
+
+.search-results .search-icon {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
 }
