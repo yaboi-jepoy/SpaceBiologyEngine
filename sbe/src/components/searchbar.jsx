@@ -35,17 +35,6 @@ export default function SearchBar() {
                         onClick={() => setSearchText("")}
                         aria-label="Clear search"
                         type="button"
-                        style={{
-                            position: "absolute",
-                            right: "18px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            padding: 0,
-                            outline: "none"
-                        }}
                     >
                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="11" cy="11" r="11" fill="#f1f3f4" />
