@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './themetoggle.css';
+import LightIcon from '../assets/theme_icons/light_mode.svg';
+import DarkIcon from '../assets/theme_icons/dark_mode.svg';
 
-const ThemeToggle = () => {
-  const [theme, setTheme] = useState('light');
-
-  useEffect(() => {
-    document.body.className = theme;
-  }, [theme]);
-
+const ThemeToggle = ({ theme, setTheme }) => {
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
   return (
-    <button className="theme-toggle-btn" onClick={toggleTheme}>
-      {theme === 'light' ? '🌞 Light Mode' : '🌜 Dark Mode'}
-    </button>
-  );
+    <img onClick={()=>{toggleTheme()}} src={theme === 'light' ? DarkIcon : LightIcon}  className='theme-toggle-btn' />
+  )
 };
 
 export default ThemeToggle;

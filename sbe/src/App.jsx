@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import './App.css';
 import SearchBar from './components/searchbar';
-import Sidebar from './components/sidebar';
-import viktorImage from './assets/viktor.jpg'
-import ThemeToggle from './components/themetoggle';
+import NavBar from './components/navBar';
+import TeamLogo from './assets/teamlogo.png'
 
-function App() {
+export default function App() {
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
+
   return (
     <div>
-      <Sidebar />
-      <img src={viktorImage} alt="" className='logo main'/>
-      <h1>NASA Biology Search</h1>
-      <SearchBar />
-      <p>or try browsing <a href="">manually</a>.</p>
-      <ThemeToggle />
+      <NavBar theme={theme} setTheme={setTheme} />
+      <div className='container'>
+        <img src={TeamLogo} className='logo main' alt='Team Logo'/>
+        <h1>Space Biology Search</h1>
+        <SearchBar />
+      </div>
     </div>
   )
 }
-
-export default App;
