@@ -1,4 +1,2 @@
 /space-biology-engine
-SB_publication_PMC.csv
-upload_csv_to_firestore.js
-.env
+sbe/.env
