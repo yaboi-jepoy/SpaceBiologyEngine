@@ -12,7 +12,7 @@ const NavBar = ({theme, setTheme}) => {
             {/* Options - Center*/}
             <ul>
                 <li><a>Home</a></li>
-                <li><a>Resources</a></li>
+                <li><a>Browse</a></li>
                 <li><a>About</a></li>
                 <li><a>Contact Us</a></li>
             </ul>
