@@ -77,7 +77,7 @@ export default function SearchBar() {
                                                 <li className="enhanced-search-result">
                                                     <div className="result-header">
                                                         <img src={SearchButton} className="result-icon" />
-                                                        <div className="result-content">
+                                                        <span className="result-content">
                                                             <div className="result-title">{pub.Title}</div>
                                                             <div className="result-meta">
                                                                 {pub.Category && (
@@ -104,7 +104,7 @@ export default function SearchBar() {
                                                                     ✨ Exact match found
                                                                 </div>
                                                             )}
-                                                        </div>
+                                                        </span>
                                                     </div>
                                                 </li>
                                             </a>
@@ -120,7 +120,7 @@ export default function SearchBar() {
                 {/* <img onClick={handleSearch} src={SearchButton} className='search-button' alt='Search' /> */}
 
                 {/* Advanced Search Button*/}
-                <img src={AdvancedButton} href='' className='advanced-button' />
+                {/* <img src={AdvancedButton} className='advanced-button' /> */}
             </div>
         </div>
     )

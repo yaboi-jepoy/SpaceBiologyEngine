@@ -66,9 +66,14 @@
     flex-shrink: 0;
 }
 
+body.light .result-icon {
+    filter: invert(1);
+}
+
 .result-content {
+    display: block;
+    width: 100%;
     flex: 1;
-    min-width: 0;
 }
 
 .result-title {
@@ -228,7 +233,6 @@
     gap: 0;
 }
 
-
 .search-results-dropdown li {
     display: block;
     padding: 12px 20px;
@@ -255,6 +259,7 @@
 /* Make the entire result box clickable */
 .search-result-link {
     display: block;
+    width: 100%;
     text-decoration: none;
     color: inherit;
 }
@@ -299,7 +304,6 @@
 /* Advanced Search Icon */
 .advanced-button {
     width: 25px;
-    height: 25px;
     cursor: pointer;
     position: absolute;
     right: 10px;
