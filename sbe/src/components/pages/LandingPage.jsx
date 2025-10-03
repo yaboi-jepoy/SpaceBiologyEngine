@@ -1,14 +1,29 @@
 import React from 'react';
 import { useState } from 'react';
-import '../../styles/NASASearch.css';
+// import '../../styles/NASASearch.css';    // OLD CSS
+import '../../styles/pages/LandingPage.css';    // NEW CSS
+import blackLogo from '../../assets/app_logos/bioseeker_black.png' ;
 
 export default function LandingPage() {
     return (
         <div className="nasa-search-container">
+            {/* LOGO */}
+            <img src={blackLogo}></img>
+            {/* TITLE AND SUBTITLE */}
             <div className="nasa-search-header">
                 <p className="nasa-title">NASA Space Biology Knowledge Engine</p>
                 <p className="nasa-subtitle">Search across 608+ publications from NASA's OSDR, NSLSL, and Task Book</p>
             </div>
+            {/* SEARCHBAR */}
+            <div className="nasa-search-box">
+                <input 
+                    type="text"
+                    placeholder="What's on your mind..."
+                    className="nasa-search-input"
+                    aria-label='NASA research search'
+                    />
+            </div>
+            {/* PLACEHOLDER FOR HAMBURGER MENU */}
         </div>
     );
 }
