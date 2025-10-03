@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import '../styles/NASASearch.css';
+import '../../styles/NASASearch.css';
 
 export default function LandingPage() {
     return (

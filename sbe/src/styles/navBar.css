@@ -1,0 +1,64 @@
+.navbar {
+    width: 100vw;
+    height: 11vh;
+    display: flex;
+    align-items: center;
+    padding: 10px 10%;
+    box-sizing: border-box;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.team-logo {
+    width: 11vw;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    will-change: filter, transform;
+    transition: filter 300ms, transform 0.3s ease;
+}
+
+body.dark .team-logo {
+    filter: invert(1);
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.navbar ul li a.active {
+    color: #9c88ff;
+    font-weight: 600;
+}
+
+/* di nakacenter yung mga options -aldous */
+.options {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    flex: 1;
+    list-style: none;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    display: inline-block;
+    margin: 0 4vw 0 0;
+    font-size: 1vw;
+    cursor: pointer;
+}
+
+

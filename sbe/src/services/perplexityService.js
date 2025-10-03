@@ -1,0 +1,309 @@
+// src/services/perplexityService.js
+export class PerplexityService {
+  constructor() {
+    this.apiKey = import.meta.env.VITE_PERPLEXITY_API_KEY;
+    this.baseUrl = 'https://api.perplexity.ai/chat/completions';
+    this._controllers = new Set();
+    
+    // NASA resource domains for focused search
+    this.nasaDomains = [
+      'nasa.gov/osdr',
+      'public.ksc.nasa.gov/nslsl',
+      'taskbook.nasaprs.com',
+      'osdr.nasa.gov'
+    ];
+  }
+
+  cancelOngoing() {
+    this._controllers.forEach(ctrl => ctrl.abort());
+    this._controllers.clear();
+  }
+
+  _withAbort(init = {}, timeoutMs = 20000) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    this._controllers.add(controller);
+    const initWithSignal = { ...init, signal: controller.signal };
+    const finalize = () => {
+      clearTimeout(timeout);
+      this._controllers.delete(controller);
+    };
+    return { initWithSignal, finalize };
+  }
+
+  async enhanceSearchQuery(userQuery) {
+    if (!this.apiKey) {
+      console.warn('Perplexity API key not found, using fallback');
+      return this.fallbackQueryEnhancement(userQuery);
+    }
+
+    try {
+      const { initWithSignal, finalize } = this._withAbort({
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'sonar',
+          messages: [
+            {
+              role: 'system',
+              content: `Return ONLY JSON with fields: originalQuery, keywords, scientificTerms, categories, tags. Focus on space biology terms.`
+            },
+            {
+              role: 'user',
+              content: `Enhance this search query: "${userQuery}"`
+            }
+          ],
+          max_tokens: 120,
+          temperature: 0.2
+        })
+      });
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
+
+      if (!response.ok) {
+        throw new Error(`Perplexity API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const content = data.choices[0].message.content;
+      
+      try {
+        const parsed = JSON.parse(content);
+        return {
+          ...parsed,
+          success: true
+        };
+      } catch (parseError) {
+        console.warn('Failed to parse Perplexity response, using fallback');
+        return this.fallbackQueryEnhancement(userQuery);
+      }
+    } catch (error) {
+      console.error('Perplexity API error:', error);
+      return this.fallbackQueryEnhancement(userQuery);
+    }
+  }
+
+  /**
+   * Search NASA resources using Perplexity AI with domain-specific focus
+   * This searches across OSDR, NSLSL, and Task Book databases
+   */
+  async searchNASAResources(userQuery, options = {}) {
+    if (!this.apiKey) {
+      console.warn('Perplexity API key not found');
+      return {
+        success: false,
+        error: 'API key not configured',
+        fallback: true
+      };
+    }
+
+    const {
+      maxResults = 10,
+      focusDomains = this.nasaDomains,
+      searchType = 'comprehensive' // 'comprehensive', 'publications', 'datasets', 'grants'
+    } = options;
+
+    try {
+      const domainContext = this.getDomainContext(searchType);
+      const { initWithSignal, finalize } = this._withAbort({
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'sonar',
+          messages: [
+            {
+              role: 'system',
+              content: `Search ONLY NASA domains listed. Provide concise sections with citations.`
+            },
+            {
+              role: 'user',
+              content: `${domainContext}\nQuery: "${userQuery}"`
+            }
+          ],
+          max_tokens: 900,
+          temperature: 0.2,
+          search_domain_filter: focusDomains,
+          return_citations: true
+        })
+      }, 25000);
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
+
+      if (!response.ok) {
+        throw new Error(`Perplexity API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const content = data.choices[0].message.content;
+      const citations = data.citations || [];
+
+      return {
+        success: true,
+        query: userQuery,
+        response: content,
+        citations: citations,
+        timestamp: new Date().toISOString(),
+        searchType: searchType
+      };
+    } catch (error) {
+      console.error('NASA search error:', error);
+      return {
+        success: false,
+        error: error.message,
+        query: userQuery
+      };
+    }
+  }
+
+  /**
+   * Get specific insights about research gaps and opportunities
+   */
+  async analyzeResearchGaps(topic) {
+    if (!this.apiKey) {
+      return { success: false, error: 'API key not configured' };
+    }
+
+    try {
+      const { initWithSignal, finalize } = this._withAbort({
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'sonar',
+          messages: [
+            { role: 'system', content: `Identify progress and gaps. Be concise. Cite NASA.` },
+            { role: 'user', content: `Topic: "${topic}"` }
+          ],
+          max_tokens: 900,
+          temperature: 0.25,
+          search_domain_filter: this.nasaDomains
+        })
+      });
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
+
+      if (!response.ok) {
+        throw new Error(`Perplexity API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return {
+        success: true,
+        topic: topic,
+        analysis: data.choices[0].message.content,
+        citations: data.citations || [],
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Gap analysis error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Get domain-specific context for different search types
+   */
+  getDomainContext(searchType) {
+    const contexts = {
+      comprehensive: 'Search across all NASA resources for comprehensive information including experiments, publications, and funded projects.',
+      publications: 'Focus on scientific publications and literature from the NASA Space Life Sciences Library.',
+      datasets: 'Focus on experimental data and datasets from the NASA Open Science Data Repository.',
+      grants: 'Focus on funded research projects and grants from the NASA Task Book.'
+    };
+    return contexts[searchType] || contexts.comprehensive;
+  }
+
+  /**
+   * Extract structured data from NASA search results
+   */
+  async extractStructuredData(searchResults) {
+    if (!this.apiKey || !searchResults.response) {
+      return null;
+    }
+
+    try {
+      const { initWithSignal, finalize } = this._withAbort({
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'sonar',
+          messages: [
+            { role: 'system', content: `Return ONLY valid JSON with fields: experiments, publications, datasets, keyFindings, researchGaps, categories.` },
+            { role: 'user', content: `${searchResults.response}` }
+          ],
+          max_tokens: 600,
+          temperature: 0.1
+        })
+      });
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
+
+      if (!response.ok) {
+        throw new Error(`Extraction error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const content = data.choices[0].message.content;
+      
+      try {
+        return JSON.parse(content);
+      } catch (parseError) {
+        console.warn('Failed to parse structured data');
+        return null;
+      }
+    } catch (error) {
+      console.error('Structured data extraction error:', error);
+      return null;
+    }
+  }
+
+  fallbackQueryEnhancement(query) {
+    // Simple fallback enhancement
+    const words = query.toLowerCase()
+      .split(/\s+/)
+      .filter(word => word.length > 2)
+      .filter(word => !['the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'].includes(word));
+    
+    // Add common space biology synonyms
+    const synonymMap = {
+      'space': ['microgravity', 'orbital', 'astronaut', 'cosmic'],
+      'bone': ['skeletal', 'osteo', 'calcium'],
+      'muscle': ['muscular', 'atrophy', 'strength'],
+      'cell': ['cellular', 'biology', 'growth'],
+      'plant': ['botanical', 'agriculture', 'photosynthesis']
+    };
+
+    let enhancedKeywords = [...words];
+    words.forEach(word => {
+      if (synonymMap[word]) {
+        enhancedKeywords.push(...synonymMap[word]);
+      }
+    });
+
+    return {
+      originalQuery: query,
+      keywords: enhancedKeywords,
+      scientificTerms: words,
+      categories: [],
+      tags: words,
+      success: false,
+      fallback: true
+    };
+  }
+}
+
+export default new PerplexityService();

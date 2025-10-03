@@ -1,0 +1,54 @@
+:root {
+  font-family: system-ui, Helvetica, Arial, sans-serif;
+  color-scheme: light dark;
+}
+
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+  transition: background 0.3s, color 0.3s;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #2f3640;
+    background: #f5f6fa;
+  }
+
+  a {
+    color: #8c7ae6;
+  }
+
+  a:hover {
+    color: #9c88ff;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f5f6fa;
+    background: #2f3640;
+  }
+
+  a {
+    color: #8c7ae6;
+  }
+
+  a:hover {
+    color: #bcafff;
+  }
+}
+
+
