@@ -1,0 +1,133 @@
+.knowledge-graph-container {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.knowledge-graph-container h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.4em;
+}
+
+.graph-canvas {
+    position: relative;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 500px;
+}
+
+.graph-node {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.graph-node:hover {
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.6));
+}
+
+.node-details {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.node-details h4 {
+    margin: 0 0 10px 0;
+    color: #667eea;
+    font-size: 1.1em;
+}
+
+.node-details p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.graph-legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.legend-color.category {
+    background: #667eea;
+}
+
+.legend-color.finding {
+    background: #4caf50;
+}
+
+.legend-color.gap {
+    background: #ff9800;
+}
+
+@media (max-width: 768px) {
+    .graph-canvas {
+        min-height: 400px;
+    }
+
+    .node-details {
+        position: static;
+        margin-top: 20px;
+        max-width: 100%;
+    }
+
+    .graph-legend {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+}

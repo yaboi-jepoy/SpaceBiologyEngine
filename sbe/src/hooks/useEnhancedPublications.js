@@ -4,11 +4,12 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import perplexityService from "../services/perplexityService";
 
-export default function useEnhancedPublications(searchTerm = "") {
+export default function useEnhancedPublications(searchTerm = "", searchBoth = true) {
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [enhancedQuery, setEnhancedQuery] = useState(null);
   const [searchPhase, setSearchPhase] = useState('idle'); // 'idle', 'enhancing', 'searching', 'complete'
+  const [nasaResults, setNasaResults] = useState(null);
 
   useEffect(() => {
     async function fetchAndSearchData() {
@@ -16,6 +17,7 @@ export default function useEnhancedPublications(searchTerm = "") {
         setPublications([]);
         setSearchPhase('idle');
         setEnhancedQuery(null);
+        setNasaResults(null);
         return;
       }
 
@@ -27,16 +29,72 @@ export default function useEnhancedPublications(searchTerm = "") {
         const enhanced = await perplexityService.enhanceSearchQuery(searchTerm);
         setEnhancedQuery(enhanced);
         
-        // Phase 2: Fetch all publications and search
+        // Phase 2: Search Firestore database
         setSearchPhase('searching');
         const querySnapshot = await getDocs(collection(db, "publications"));
-        let data = querySnapshot.docs.map(doc => ({
+        let firestoreData = querySnapshot.docs.map(doc => ({
           id: doc.id,
+          source: 'firestore',
           ...doc.data()
         }));
         
+        // Phase 3: Search NASA resources if enabled
+        let nasaPublications = [];
+        if (searchBoth) {
+          setSearchPhase('searching-nasa');
+          const nasaSearch = await perplexityService.searchNASAResources(searchTerm, {
+            searchType: 'comprehensive'
+          });
+          
+          if (nasaSearch.success) {
+            setNasaResults(nasaSearch);
+            
+            // Clean up the NASA response by removing citation markers
+            const cleanResponse = cleanPerplexityResponse(nasaSearch.response);
+            
+            // Create a direct NASA result from the search response
+            // This ensures the NASA content is always shown
+            nasaPublications.push({
+              id: 'nasa-direct',
+              Title: `NASA Research: ${searchTerm}`,
+              Authors: 'NASA',
+              Year: new Date().getFullYear().toString(),
+              Link: nasaSearch.citations && nasaSearch.citations[0] ? nasaSearch.citations[0] : 'https://osdr.nasa.gov',
+              Category: 'NASA OSDR/NSLSL/Task Book',
+              Tags: ['NASA', 'Space Biology', 'Research'],
+              Summary: cleanResponse.substring(0, 300) + '...',
+              Abstract: cleanResponse,
+              source: 'nasa',
+              relevanceScore: 200, // Highest priority
+              isNASADirect: true
+            });
+            
+            // Extract structured data from NASA results
+            const structured = await perplexityService.extractStructuredData(nasaSearch);
+            
+            if (structured && structured.publications) {
+              const extractedPubs = structured.publications.map((pub, idx) => ({
+                id: `nasa-${idx}`,
+                Title: pub.title,
+                Authors: pub.authors || 'Not available',
+                Year: pub.year || 'N/A',
+                Link: pub.link || 'https://osdr.nasa.gov',
+                Category: 'NASA Research',
+                Tags: structured.categories || [],
+                Summary: pub.summary || nasaSearch.response.substring(0, 200) + '...',
+                source: 'nasa',
+                relevanceScore: 150 // High priority for NASA results
+              }));
+              nasaPublications.push(...extractedPubs);
+            }
+          }
+        }
+        
+        // Combine Firestore and NASA results
+        const allData = [...firestoreData, ...nasaPublications];
+        
         // Enhanced search with scoring
-        const searchResults = searchPublications(data, enhanced, searchTerm);
+        const searchResults = searchPublications(allData, enhanced, searchTerm);
         
         setPublications(searchResults);
         setSearchPhase('complete');
@@ -51,13 +109,14 @@ export default function useEnhancedPublications(searchTerm = "") {
     // Debounce the search
     const timeoutId = setTimeout(fetchAndSearchData, 500);
     return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+  }, [searchTerm, searchBoth]);
 
   return { 
     publications, 
     loading, 
     enhancedQuery, 
     searchPhase,
+    nasaResults,
     getPhaseMessage: () => getPhaseMessage(searchPhase, publications.length)
   };
 }
@@ -185,12 +244,37 @@ function getRelevanceCategory(score) {
   }
 }
 
+/**
+ * Clean Perplexity AI response by removing citation markers and special symbols
+ */
+function cleanPerplexityResponse(text) {
+  if (!text) return '';
+  
+  return text
+    // Remove citation markers like [1], [2], [3], etc.
+    .replace(/\[\d+\]/g, '')
+    // Remove multiple citation markers like [1][2][3]
+    .replace(/(\[\d+\])+/g, '')
+    // Remove citation ranges like [1-3]
+    .replace(/\[\d+-\d+\]/g, '')
+    // Clean up extra spaces left by removed citations
+    .replace(/\s+/g, ' ')
+    // Remove leading/trailing spaces
+    .trim()
+    // Fix spacing around punctuation
+    .replace(/\s+([.,;:!?])/g, '$1')
+    // Fix spacing after punctuation
+    .replace(/([.,;:!?])([A-Z])/g, '$1 $2');
+}
+
 function getPhaseMessage(phase, resultCount) {
   switch (phase) {
     case 'enhancing':
       return 'Analyzing query with AI...';
     case 'searching':
-      return 'Searching publications...';
+      return 'Searching Firestore database...';
+    case 'searching-nasa':
+      return 'Searching NASA resources...';
     case 'complete':
       return `Found ${resultCount} relevant publications`;
     case 'error':

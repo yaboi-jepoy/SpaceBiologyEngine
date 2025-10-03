@@ -4,33 +4,71 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
   text-align: center;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-out;
+  will-change: filter, transform;
+  transition: filter 300ms, transform 0.3s ease;
+  animation: fadeInScale 0.7s ease-out;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+    min-height: 70vh;
+  }
+}
+
+/* logo in light mode */
 .logo {
-  height: 12em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  height: 14em;
+  margin-top: 2vh;
+  padding: 1em;
 }
 
-body.light .logo {
-  filter: invert(1);
+/* add animation to scaling */
+.logo .hover {
+  transform: scale(1.03);
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #9c88ff);
+/* nagiging balck yung logo pag hinover ;( -aldous */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .logo {
+    height: 12em;
+    padding: 1em;
+  }
 }
 
 .title {
   margin: 0;
 }
 
-.title h1 {
-  margin: 0 0 3vh 0;
+.title-1 {
+  margin: 2vh 0 0 0;
 }
 
-.title p {
-  margin: 0;
+.supp-text {
+  font-size: 18px;
+  margin-bottom: 0.1em;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2em;
+  }
+}
+
+.sub-note:hover {
+  opacity: 1;
 }
