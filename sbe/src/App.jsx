@@ -11,7 +11,7 @@ import BrowsePage from './components/pages/BrowsePage';
 import ResultsPage from './components/pages/ResultsPage';
 
 export default function App() {
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
   // const [activeView, setActiveView] = useState('home');
 
   useEffect(() => {
