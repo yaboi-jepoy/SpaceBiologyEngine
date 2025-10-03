@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './themetoggle.css';
+import '../styles/themetoggle.css';
 import LightIcon from '../assets/theme_icons/light_mode.svg';
 import DarkIcon from '../assets/theme_icons/dark_mode.svg';
 

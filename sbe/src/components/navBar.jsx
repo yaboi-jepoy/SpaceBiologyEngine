@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './navBar.css';
+import '../styles/navBar.css';
 import AppLogoFull from '../assets/app_logos/bioseeker_full_black.png'
 import ThemeToggle from './themetoggle';
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './KnowledgeGraph.css';
+import '../styles/KnowledgeGraph.css';
 
 export default function KnowledgeGraph({ data }) {
     const [selectedNode, setSelectedNode] = useState(null);

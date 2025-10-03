@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './searchbar.css'
+import '../styles/searchbar.css'
 import SearchButton from '../assets/main_page_icons/search.svg';
 import ClearIcon from '../assets/main_page_icons/clear.svg';
 import useEnhancedPublications from "../hooks/useEnhancedPublications";

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './NASASearch.css';
+import '../styles/NASASearch.css';
 import perplexityService from '../services/perplexityService';
 import KnowledgeGraph from './KnowledgeGraph';
 
