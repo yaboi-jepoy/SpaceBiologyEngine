@@ -1,2 +1,4 @@
 /space-biology-engine
 sbe/.env
+package-lock.json
+sbe/node_modules
