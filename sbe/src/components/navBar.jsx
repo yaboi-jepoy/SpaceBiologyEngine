@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './navBar.css';
-import LogoWhite from '../assets/app_logo/bioseeker_full_white.png';
+import LogoWhite from '../assets/app_logos/bioseeker_full_white.png';
 import ThemeToggle from './themetoggle';
 
 const NavBar = ({theme, setTheme}) => {
