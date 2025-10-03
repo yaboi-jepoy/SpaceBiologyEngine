@@ -3,6 +3,7 @@ export class PerplexityService {
   constructor() {
     this.apiKey = import.meta.env.VITE_PERPLEXITY_API_KEY;
     this.baseUrl = 'https://api.perplexity.ai/chat/completions';
+    this._controllers = new Set();
     
     // NASA resource domains for focused search
     this.nasaDomains = [
@@ -13,6 +14,23 @@ export class PerplexityService {
     ];
   }
 
+  cancelOngoing() {
+    this._controllers.forEach(ctrl => ctrl.abort());
+    this._controllers.clear();
+  }
+
+  _withAbort(init = {}, timeoutMs = 20000) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    this._controllers.add(controller);
+    const initWithSignal = { ...init, signal: controller.signal };
+    const finalize = () => {
+      clearTimeout(timeout);
+      this._controllers.delete(controller);
+    };
+    return { initWithSignal, finalize };
+  }
+
   async enhanceSearchQuery(userQuery) {
     if (!this.apiKey) {
       console.warn('Perplexity API key not found, using fallback');
@@ -20,7 +38,7 @@ export class PerplexityService {
     }
 
     try {
-      const response = await fetch(this.baseUrl, {
+      const { initWithSignal, finalize } = this._withAbort({
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
@@ -31,32 +49,19 @@ export class PerplexityService {
           messages: [
             {
               role: 'system',
-              content: `You are a space biology research assistant. For a given search query, extract relevant keywords and suggest related terms for scientific literature search.
-
-              Return ONLY a JSON object with this structure:
-              {
-                "originalQuery": "user's original query",
-                "keywords": ["keyword1", "keyword2", ...],
-                "scientificTerms": ["term1", "term2", ...],
-                "categories": ["category1", "category2", ...],
-                "tags": ["tag1", "tag2", ...]
-              }
-
-              Focus on space biology, microgravity, astronaut health, space medicine, astrobiology, and related research fields.
-              
-              Categories might include: "Microgravity Effects", "Astronaut Health", "Plant Biology", "Cell Biology", "Radiation", "Bone Density", "Muscle Atrophy", "Cardiovascular", "Neuroscience", "Genetics", "Biotechnology"
-              
-              Tags should be specific research terms, experimental conditions, or methodologies.`
+              content: `Return ONLY JSON with fields: originalQuery, keywords, scientificTerms, categories, tags. Focus on space biology terms.`
             },
             {
               role: 'user',
-              content: `Enhance this search query for space biology research: "${userQuery}"`
+              content: `Enhance this search query: "${userQuery}"`
             }
           ],
-          max_tokens: 300,
-          temperature: 0.3
+          max_tokens: 120,
+          temperature: 0.2
         })
       });
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
 
       if (!response.ok) {
         throw new Error(`Perplexity API error: ${response.status}`);
@@ -103,8 +108,7 @@ export class PerplexityService {
 
     try {
       const domainContext = this.getDomainContext(searchType);
-      
-      const response = await fetch(this.baseUrl, {
+      const { initWithSignal, finalize } = this._withAbort({
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
@@ -115,36 +119,21 @@ export class PerplexityService {
           messages: [
             {
               role: 'system',
-              content: `You are a NASA Space Biology research expert. Search and summarize information from NASA's official space biology resources.
-
-CRITICAL: Focus ONLY on these NASA domains:
-- nasa.gov/osdr (Open Science Data Repository - biological experiments data)
-- public.ksc.nasa.gov/nslsl (Space Life Sciences Library - publications)
-- taskbook.nasaprs.com (Task Book - funded research projects)
-- osdr.nasa.gov (Open Science Data Repository - additional domain)
-
-${domainContext}
-
-Provide a comprehensive response with:
-1. Key findings and insights
-2. Relevant experiments or studies
-3. Important publications or datasets
-4. Research gaps or opportunities
-5. Actionable information for mission planning
-
-Format your response in clear sections with citations to specific NASA resources.`
+              content: `Search ONLY NASA domains listed. Provide concise sections with citations.`
             },
             {
               role: 'user',
-              content: `Search NASA space biology resources for: "${userQuery}"`
+              content: `${domainContext}\nQuery: "${userQuery}"`
             }
           ],
-          max_tokens: 2000,
+          max_tokens: 900,
           temperature: 0.2,
           search_domain_filter: focusDomains,
           return_citations: true
         })
-      });
+      }, 25000);
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
 
       if (!response.ok) {
         throw new Error(`Perplexity API error: ${response.status}`);
@@ -181,7 +170,7 @@ Format your response in clear sections with citations to specific NASA resources
     }
 
     try {
-      const response = await fetch(this.baseUrl, {
+      const { initWithSignal, finalize } = this._withAbort({
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
@@ -190,29 +179,16 @@ Format your response in clear sections with citations to specific NASA resources
         body: JSON.stringify({
           model: 'sonar',
           messages: [
-            {
-              role: 'system',
-              content: `You are a NASA research strategist analyzing space biology research gaps.
-
-Search NASA resources (nasa.gov/osdr, public.ksc.nasa.gov/nslsl, taskbook.nasaprs.com, osdr.nasa.gov) and identify:
-1. Areas of scientific progress
-2. Knowledge gaps requiring additional research
-3. Areas of consensus or disagreement
-4. Investment opportunities
-5. Critical needs for Moon/Mars missions
-
-Provide actionable insights for research managers and mission architects.`
-            },
-            {
-              role: 'user',
-              content: `Analyze research gaps and opportunities in: "${topic}"`
-            }
+            { role: 'system', content: `Identify progress and gaps. Be concise. Cite NASA.` },
+            { role: 'user', content: `Topic: "${topic}"` }
           ],
-          max_tokens: 1500,
-          temperature: 0.3,
+          max_tokens: 900,
+          temperature: 0.25,
           search_domain_filter: this.nasaDomains
         })
       });
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
 
       if (!response.ok) {
         throw new Error(`Perplexity API error: ${response.status}`);
@@ -257,7 +233,7 @@ Provide actionable insights for research managers and mission architects.`
     }
 
     try {
-      const response = await fetch(this.baseUrl, {
+      const { initWithSignal, finalize } = this._withAbort({
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
@@ -266,27 +242,15 @@ Provide actionable insights for research managers and mission architects.`
         body: JSON.stringify({
           model: 'sonar',
           messages: [
-            {
-              role: 'system',
-              content: `Extract structured data from NASA search results. Return ONLY valid JSON with this structure:
-{
-  "experiments": [{"title": "", "link": "", "summary": ""}],
-  "publications": [{"title": "", "authors": "", "year": "", "link": ""}],
-  "datasets": [{"title": "", "type": "", "link": ""}],
-  "keyFindings": ["finding1", "finding2"],
-  "researchGaps": ["gap1", "gap2"],
-  "categories": ["category1", "category2"]
-}`
-            },
-            {
-              role: 'user',
-              content: `Extract structured data from: ${searchResults.response}`
-            }
+            { role: 'system', content: `Return ONLY valid JSON with fields: experiments, publications, datasets, keyFindings, researchGaps, categories.` },
+            { role: 'user', content: `${searchResults.response}` }
           ],
-          max_tokens: 1000,
+          max_tokens: 600,
           temperature: 0.1
         })
       });
+      const response = await fetch(this.baseUrl, initWithSignal);
+      finalize();
 
       if (!response.ok) {
         throw new Error(`Extraction error: ${response.status}`);

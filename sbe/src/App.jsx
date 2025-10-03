@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import './styles/App.css';
 import SearchBar from './components/searchbar';
+import SearchResults from './components/SearchResults';
 import NavBar from './components/navBar';
 import NASASearch from './components/NASASearch';
 import AppLogo from './assets/app_logos/bioseeker_black.png'
@@ -8,6 +9,7 @@ import AppLogo from './assets/app_logos/bioseeker_black.png'
 export default function App() {
   const [theme, setTheme] = useState('light');
   const [activeView, setActiveView] = useState('home');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     document.body.className = theme;
@@ -29,7 +31,7 @@ export default function App() {
             <h1 className='title' id="main-heading">Welcome to BioSeeker!</h1>
             <p className='supp-text'>What are you curious about?</p>
           </div>
-          <SearchBar />
+          <SearchBar onSubmitQuery={(q) => { setSearchQuery(q); setActiveView('search'); }} />
           <p className="sub-note">
             or explore <a onClick={() => setActiveView('nasa')} tabIndex="0" role="link" aria-label="NASA Knowledge Engine" style={{cursor: 'pointer'}}>NASA Knowledge Engine</a>...
           </p>
@@ -43,6 +45,12 @@ export default function App() {
           <p style={{textAlign: 'center', color: '#666', marginTop: '20px'}}>
             NASA Knowledge Engine coming soon...
           </p>
+        </main>
+      )}
+
+      {activeView === 'search' && (
+        <main className='container'>
+          <SearchResults query={searchQuery} />
         </main>
       )}
 

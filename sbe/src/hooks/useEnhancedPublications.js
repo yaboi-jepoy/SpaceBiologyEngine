@@ -4,12 +4,15 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import perplexityService from "../services/perplexityService";
 
-export default function useEnhancedPublications(searchTerm = "", searchBoth = true) {
+export default function useEnhancedPublications(searchTerm = "", searchBoth = true, enableAI = true) {
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [enhancedQuery, setEnhancedQuery] = useState(null);
   const [searchPhase, setSearchPhase] = useState('idle'); // 'idle', 'enhancing', 'searching', 'complete'
   const [nasaResults, setNasaResults] = useState(null);
+  const [allFirestore, setAllFirestore] = useState(null);
+  const [lastQuery, setLastQuery] = useState('');
+  const [pendingTimer, setPendingTimer] = useState(null);
 
   useEffect(() => {
     async function fetchAndSearchData() {
@@ -23,27 +26,40 @@ export default function useEnhancedPublications(searchTerm = "", searchBoth = tr
 
       try {
         setLoading(true);
+        // cancel any ongoing AI calls
+        perplexityService.cancelOngoing();
+        setLastQuery(searchTerm);
         
-        // Phase 1: Enhance query with AI
+        // Phase 1: Enhance query with AI (or fallback if disabled)
         setSearchPhase('enhancing');
-        const enhanced = await perplexityService.enhanceSearchQuery(searchTerm);
+        let enhanced = { originalQuery: searchTerm, keywords: [], scientificTerms: [], categories: [], tags: [] };
+        if (enableAI) {
+          enhanced = await perplexityService.enhanceSearchQuery(searchTerm);
+        } else {
+          // lightweight local enhancement to power suggestions quickly without API
+          enhanced = perplexityService.fallbackQueryEnhancement(searchTerm);
+        }
         setEnhancedQuery(enhanced);
         
         // Phase 2: Search Firestore database
         setSearchPhase('searching');
-        const querySnapshot = await getDocs(collection(db, "publications"));
-        let firestoreData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          source: 'firestore',
-          ...doc.data()
-        }));
+        let firestoreData = allFirestore;
+        if (!firestoreData) {
+          const querySnapshot = await getDocs(collection(db, "publications"));
+          firestoreData = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            source: 'firestore',
+            ...doc.data()
+          }));
+          setAllFirestore(firestoreData);
+        }
         
         // Phase 3: Search NASA resources if enabled
         let nasaPublications = [];
-        if (searchBoth) {
+        if (searchBoth && enableAI) {
           setSearchPhase('searching-nasa');
           const nasaSearch = await perplexityService.searchNASAResources(searchTerm, {
-            searchType: 'comprehensive'
+            searchType: 'publications'
           });
           
           if (nasaSearch.success) {
@@ -106,10 +122,15 @@ export default function useEnhancedPublications(searchTerm = "", searchBoth = tr
       }
     }
 
-    // Debounce the search
-    const timeoutId = setTimeout(fetchAndSearchData, 500);
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm, searchBoth]);
+        // Debounce the search (shorter)
+        if (pendingTimer) clearTimeout(pendingTimer);
+        const timeoutId = setTimeout(fetchAndSearchData, 250);
+        setPendingTimer(timeoutId);
+        return () => {
+          clearTimeout(timeoutId);
+          if (enableAI) perplexityService.cancelOngoing();
+        };
+  }, [searchTerm, searchBoth, enableAI]);
 
   return { 
     publications, 
