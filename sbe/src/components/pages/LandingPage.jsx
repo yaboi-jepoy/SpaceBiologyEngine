@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
-// import '../../styles/NASASearch.css';    // OLD CSS
-import '../../styles/pages/LandingPage.css';    // NEW CSS
+import '../../styles/NASASearch.css';    // OLD CSS
+// import '../../styles/pages/LandingPage.css';    // NEW CSS
 import blackLogo from '../../assets/app_logos/bioseeker_black.png' ;
 
 export default function LandingPage() {
