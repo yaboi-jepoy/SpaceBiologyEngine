@@ -2,3 +2,5 @@
 sbe/.env
 package-lock.json
 sbe/node_modules
+sbe/node_modules/.vite/deps/_metadata.json
+sbe/node_modules/.vite/deps/package.json
