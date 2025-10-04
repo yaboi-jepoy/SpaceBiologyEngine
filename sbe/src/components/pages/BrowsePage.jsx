@@ -35,7 +35,8 @@ const BrowsePage = ({ theme, setTheme }) => {
             <CategoryCard title={category[0]} desc={category[1]}/>
           ))}
         </div>
-        </div>
+      </div>
+    </div>
   );
 }
 
