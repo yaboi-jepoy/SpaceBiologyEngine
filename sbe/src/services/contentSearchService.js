@@ -86,7 +86,7 @@ export class ContentSearchService {
         category: pub.Category || pub.category || 'Uncategorized',
         tags: pub.Tags || pub.tags || '',
         impact: impact, // Keep impact field too
-        source: 'Local Database',
+        source: 'Biology Publications',
         relevanceScore: pub.relevanceScore || 0
       };
     });
