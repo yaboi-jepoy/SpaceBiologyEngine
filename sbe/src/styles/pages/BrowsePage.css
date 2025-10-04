@@ -1,4 +1,4 @@
-.browse-container {
+.browse-page-0container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -11,7 +11,7 @@
 }
 
 /* title lng */
-.browse-title {
+.browse-main-title {
     font-size: 50px;
     margin-bottom: 20px;
     text-align: center;
@@ -20,10 +20,9 @@
 
 /* eto yung sa alignment ng mga box */
 /* basta container to -jp */
-.category-list {
+.categories-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
     list-style: none;
     grid-auto-rows: min-content; /* para stay as one pa rin yung gap ng height */
     padding: 0;
@@ -37,7 +36,7 @@
 
 /* eto yung sa box ng "calling card" */
 /* to yung mga anak -jp */
-.category-list li {
+.category-card {
     background: #fff;
     border: 2px solid #1976d2;
     border-radius: 12px;
@@ -61,7 +60,7 @@
     transition: all 0.55s cubic-bezier(.4,0,0.2,1);
 }
 
-.category-list li:hover {
+.category-card:hover {
     min-height: 220px;
     max-width: 500px;
     z-index: 2;
