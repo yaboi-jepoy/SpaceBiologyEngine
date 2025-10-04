@@ -35,7 +35,6 @@ const BrowsePage = ({ theme, setTheme }) => {
           ))}
         </div>
       </div>
-    </div>
   );
 }
 
