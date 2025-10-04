@@ -1,12 +1,10 @@
 import { useState } from "react";
 import '../styles/SideBar.css';
-import ThemeToggle from './ThemeToggle';
+import ThemeToggle from './themetoggle';
 import blackLogo from '../assets/app_logos/bioseeker_black.png';
 import whiteLogo from '../assets/app_logos/bioseeker_white.png';
 
 const SideBar = ({ theme, setTheme }) => {
-    const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
-    
     return (
         <div className='side-bar-container'>
             <div className='side-bar-routes'>
@@ -27,7 +25,7 @@ const SideBar = ({ theme, setTheme }) => {
                 <a href="challenge">Challenge</a>
                 <a href="about">About</a>
                 {/* TOGGLE THEME ICON */}
-                <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
+                <ThemeToggle theme={theme} setTheme={setTheme}/>
             </div>
         </div>
     )

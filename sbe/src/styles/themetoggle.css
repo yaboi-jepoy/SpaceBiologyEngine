@@ -1,12 +1,63 @@
 .theme-toggle-btn {
-  display: relative;
-  bottom: 25px;
-  width: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 2px solid currentColor;
+  border-radius: 8px;
   cursor: pointer;
-  will-change: filter, transform;
-  transition: filter 300ms, transform 0.3s ease;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.theme-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.theme-text {
+  font-weight: 500;
+}
+
+/* Theme-specific styles */
+body.light {
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+body.dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
 }
 
 body {
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme toggle button styles */
+body.dark .theme-toggle-btn {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+body.dark .theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Light theme toggle button styles */
+body.light .theme-toggle-btn {
+  border-color: #1a1a1a;
+  color: #1a1a1a;
+}
+
+body.light .theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
 }

@@ -7,12 +7,10 @@ import whiteLogo from '../../assets/app_logos/bioseeker_white.png';
 // import FloatingButton from '../floatingButton';
 
 const LandingPage = ({ theme, setTheme }) => {
-  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
-
   return (
     <div className={`nasa-search-container`}>
       {/* SIDEBAR */}
-      <SideBar theme={theme} setTheme={toggleTheme} />
+      <SideBar theme={theme} setTheme={setTheme} />
       <div id='main-page'>
         {/* LOGO */}
         <img

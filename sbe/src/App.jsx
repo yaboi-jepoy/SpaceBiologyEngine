@@ -16,30 +16,25 @@ import AboutPage from './components/pages/AboutPage';
 export default function App() {
   const [theme, setTheme] = useState('light');
 
-  const toggleTheme = () => {
-    console.log("Theme is:", theme);
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  }
-
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
 
   return (
     <Router>
-      <div className='sbe-container ${theme}' role='application' aria-label='Space Biology Search Engine'>
+      <div className={`sbe-container ${theme}`} role='application' aria-label='Space Biology Search Engine'>
         <Routes>
           <Route path='/'
-          element={<LandingPage theme={theme} setTheme={toggleTheme} />}
+          element={<LandingPage theme={theme} setTheme={setTheme} />}
             />
           <Route path='/browse'
-          element={<BrowsePage theme={theme} setTheme={toggleTheme} />}
+          element={<BrowsePage theme={theme} setTheme={setTheme} />}
             />
           <Route path='/challenge'
-          element={<ChallengePage theme={theme} setTheme={toggleTheme} />}
+          element={<ChallengePage theme={theme} setTheme={setTheme} />}
             />
           <Route path='/about'
-          element={<AboutPage theme={theme} setTheme={toggleTheme} />}
+          element={<AboutPage theme={theme} setTheme={setTheme} />}
             />
         </Routes>
       </div>
