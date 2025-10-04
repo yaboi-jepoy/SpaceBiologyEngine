@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/themetoggle.css';
+import '../styles/ThemeToggle.css';
 import LightIcon from '../assets/theme_icons/light_mode.svg';
 import DarkIcon from '../assets/theme_icons/dark_mode.svg';
 
-const ThemeToggle = ({ theme, setTheme }) => {
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
-
+export default function ThemeToggle() {
   return (
-    <img onClick={()=>{toggleTheme()}} src={theme === 'light' ? DarkIcon : LightIcon}  className='theme-toggle-btn' />
+    <img onClick={()=>{handleTheme()}} src={theme === 'light' ? DarkIcon : LightIcon}  className='theme-toggle-btn' />
   )
-};
-
-export default ThemeToggle;
+}

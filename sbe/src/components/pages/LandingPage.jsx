@@ -1,31 +1,33 @@
 import React from 'react';
 import { useState } from 'react';
-// import '../../styles/NASASearch.css';    // OLD CSS
 import '../../styles/pages/LandingPage.css';    // NEW CSS
-import blackLogo from '../../assets/app_logos/bioseeker_black.png' ;
-import FloatingButton from '../floatingButton';
+import SideBar from '../SideBar'; // import sidebar
+import blackLogo from '../../assets/app_logos/bioseeker_black.png';
+import whiteLogo from '../../assets/app_logos/bioseeker_white.png';
+// import FloatingButton from '../floatingButton';
 
-export default function LandingPage() {
-    return (
-        <div className="nasa-search-container">
-            {/* LOGO */}
-            <img src={blackLogo} className='landing-logo'></img>
-            {/* TITLE AND SUBTITLE */}
-            <div className="nasa-search-header">
-                <p className="nasa-title">BioSeeker</p>
-                <p className="nasa-subtitle">Search across 608+ publications from NASA's OSDR, NSLSL, and Task Book</p>
-            </div>
-            {/* SEARCHBAR */}
-            <div className="nasa-search-box">
-                <input 
-                    type="text"
-                    placeholder="What's on your mind..."
-                    className="nasa-search-input"
-                    aria-label='NASA research search'
-                    />
-            </div>
-            {/* PLACEHOLDER FOR HAMBURGER MENU OR FLOATING BUTTON */}
-            {/* TO BE DECIDED PA SHA */}
+const LandingPage = ({ theme, toggleTheme }) => {
+  return (
+    <div className={`nasa-search-container`}>
+      {/* SIDEBAR */}
+      <SideBar theme={theme} toggleTheme={toggleTheme} />
+      <div id='main-page'>
+        {/* LOGO */}
+        <img
+        src={theme === 'light' ? blackLogo : whiteLogo}
+        className='landing-logo'
+        alt='BioSeeker Logo'
+        />
+        {/* TITLE AND SUBTITLE */}
+        <div className="nasa-search-header">
+          <h1 className="nasa-title">BioSeeker</h1>
+          <p className="nasa-subtitle">Your space biology searcher tool!</p>
         </div>
-    );
+        {/* SEARCHBAR */}
+        {/* PUT COMPONENT HERE */}
+      </div>
+    </div>
+  );
 }
+
+export default LandingPage;

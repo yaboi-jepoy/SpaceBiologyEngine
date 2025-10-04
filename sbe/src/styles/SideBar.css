@@ -1,0 +1,28 @@
+.side-bar-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 180px; 
+  height: 100vh;
+  padding: 48px 0 0 24px;
+  box-sizing: border-box;
+}
+
+.side-bar-routes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.side-bar-routes a {
+  display: block;
+  text-decoration: none;
+  padding: 10px 0;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+}
+
+.theme-toggle-btn {
+  width: 30px;
+  margin-top: 20px;
+}

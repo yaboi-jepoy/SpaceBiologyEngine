@@ -11,6 +11,7 @@ a {
 
 body {
   margin: 0;
+  padding: 0;
   display: flex;
   min-width: 320px;
   min-height: 100vh;
@@ -20,35 +21,3 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #2f3640;
-    background: #f5f6fa;
-  }
-
-  a {
-    color: #8c7ae6;
-  }
-
-  a:hover {
-    color: #9c88ff;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f5f6fa;
-    background: #2f3640;
-  }
-
-  a {
-    color: #8c7ae6;
-  }
-
-  a:hover {
-    color: #bcafff;
-  }
-}
-
-
