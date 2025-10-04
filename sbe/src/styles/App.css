@@ -11,12 +11,12 @@
   animation: fadeInScale 0.7s ease-out;
 }
 
-body {
-  background: #fff;
-  color: #000;
+body.light {
+  background-color: #fff;
+  color: #222;
 }
 
-.side-bar-container {
-  background: #f8fAfD;
-  color: #000;
+body.dark {
+  background-color: #000;
+  color: #fff;
 }

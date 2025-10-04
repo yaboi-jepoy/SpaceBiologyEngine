@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../styles/pages/BrowsePage.css';
+import SideBar from '../SideBar';
 
 // categories galing csv
 const categories = [
@@ -16,15 +17,19 @@ const categories = [
 ];
 
 export default function BrowsePage() {
-
   return (
-    <div className="browse-container">
-      <h2 className="browse-title">Biology Categories</h2>
-      <ul className="category-list">
-        {categories.map((cat, idx) => (
+    <div className='browse-page'>
+      <div className='browse-sidebar'>
+        <SideBar />
+      </div>
+      <div className="browse-container">
+        <h2 className="browse-title">Biology Categories</h2>
+        <ul className="category-list">
+          {categories.map((cat, idx) => (
           <li key={idx}>{cat}</li>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

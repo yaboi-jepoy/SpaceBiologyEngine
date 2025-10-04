@@ -1,29 +1,33 @@
 import { useState } from "react";
 import '../styles/SideBar.css';
-import DarkIcon from '../assets/theme_icons/dark_mode.svg'
-import LightIcon from '../assets/theme_icons/light_mode.svg'
-// import ThemeToggle from './ThemeToggle';
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // will be used for page routing
-// // pages
-// import LandingPage from './pages/LandingPage';
-// import BrowsePage from './pages/BrowsePage';
-// import ResultsPage from './components/pages/ResultsPage';
+import ThemeToggle from './ThemeToggle';
+import blackLogo from '../assets/app_logos/bioseeker_black.png';
+import whiteLogo from '../assets/app_logos/bioseeker_white.png';
 
-const SideBar = ({ theme, toggleTheme }) => {
+const SideBar = ({ theme, setTheme }) => {
+    const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    
     return (
         <div className='side-bar-container'>
             <div className='side-bar-routes'>
+                <div className="logo-full">
+                    <img
+                        src={theme === 'light' ? blackLogo : whiteLogo}
+                        className='sidebar-logo'
+                        alt='BioSeeker Logo'
+                    />
+                    {/* <div className="logo-text">
+                        <p id='app-name'>BioSeeker</p>
+                        <p id='by-team'>By Russtronauts</p>
+                    </div> */}
+                </div>
                 {/* LINKS TO PAGES */}
-                <a href="#home">Home</a>
-                <a href="#browse">Browse</a>
-                <a href="#challenge">Challenge</a>
-                <a href="#about">About</a>
+                <a href="/">Home</a>
+                <a href="browse">Browse</a>
+                <a href="challenge">Challenge</a>
+                <a href="about">About</a>
                 {/* TOGGLE THEME ICON */}
-                <img
-                onClick={toggleTheme}
-                src={theme === 'light' ? DarkIcon : LightIcon}
-                className='theme-toggle-btn'
-                />
+                <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
             </div>
         </div>
     )
