@@ -1,13 +1,12 @@
 import '../styles/categoryCard.css';
 
-export default function App() {
+export default function CategoryCard({title}) {
     return (
-        <div className='card-container'>
-            <li className='card-list'>
-                <div className='card'>
-
-                </div>
-            </li>
-        </div>
-    )
+    <div className="category-card">
+        <h3 className="category-title">{title}</h3>
+        <p className="category-description">
+            Click to explore {title.toLowerCase()} research
+        </p>
+    </div>
+)
 }

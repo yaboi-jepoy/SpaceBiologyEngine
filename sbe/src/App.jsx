@@ -12,6 +12,7 @@ import LandingPage from './components/pages/LandingPage';
 import BrowsePage from './components/pages/BrowsePage';
 import ChallengePage from './components/pages/ChallengePage';
 import AboutPage from './components/pages/AboutPage';
+import ResultsPage from './components/pages/ResultsPage';
 
 export default function App() {
   const [theme, setTheme] = useState('light');
@@ -30,8 +31,8 @@ export default function App() {
           <Route path='/browse'
           element={<BrowsePage theme={theme} setTheme={setTheme} />}
             />
-          <Route path='/challenge'
-          element={<ChallengePage theme={theme} setTheme={setTheme} />}
+          <Route path='/results'
+          element={<ResultsPage theme={theme} setTheme={setTheme} />}
             />
           <Route path='/about'
           element={<AboutPage theme={theme} setTheme={setTheme} />}

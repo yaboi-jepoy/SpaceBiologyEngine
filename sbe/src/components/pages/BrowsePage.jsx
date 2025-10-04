@@ -1,8 +1,11 @@
 import React from 'react';
 import '../../styles/pages/BrowsePage.css';
 import SideBar from '../SideBar';
+import CategoryCard from '../categoryCard';
 
 // categories galing csv
+// what if gawing key-pair value for
+// Title and Links (or title - description - links)
 const categories = [
   'Space Biology',
   'Bone & Skeletal Research',
@@ -16,19 +19,23 @@ const categories = [
   'Stem Cell Research',
 ];
 
-export default function BrowsePage() {
+export default function BrowsePage({theme, setTheme}) {
   return (
-    <div className='browse-page'>
+    <div className="browse-page-container">
       <div className='browse-sidebar'>
-        <SideBar />
+        <SideBar theme={theme} setTheme={setTheme} />
       </div>
-      <div className="browse-container">
-        <h2 className="browse-title">Biology Categories</h2>
-        <ul className="category-list">
-          {categories.map((cat, idx) => (
-          <li key={idx}>{cat}</li>
+      
+      <div className='browse-content'>
+        <h1 className="browse-main-title">Browse Biology Categories</h1>
+        <div className='categories-grid'>
+          {categories.map((category, index) => (
+            // loop
+            <CategoryCard 
+              title={category}
+            />
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
