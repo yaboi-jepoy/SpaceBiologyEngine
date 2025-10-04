@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useEnhancedPublications from "../hooks/useEnhancedPublications";
+import useEnhancedPublications from "../src/hooks/useEnhancedPublications";
 import '../styles/searchbar.css';
 
 export default function SearchResults({ query }) {

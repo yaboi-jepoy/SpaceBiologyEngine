@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../styles/NASASearch.css';
-import perplexityService from '../services/perplexityService';
+import perplexityService from '../src/services/perplexityService';
 import KnowledgeGraph from './KnowledgeGraph';
 
 // Clean Perplexity AI responses
