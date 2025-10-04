@@ -1,0 +1,36 @@
+/* CONTAINER */
+.results-container {
+    align-items: center;
+    justify-items: center;
+    padding: 2vw;
+    margin: 6vh 4vw;
+}
+
+/* HEADER */
+.results-header {
+    display: list-item;
+    list-style: none;
+}
+
+.results-searchbar {
+    display: inline;
+}
+
+/* ENTRY */
+.results-entry {
+    margin-top: 10px;
+    padding: 10px;
+
+    border: solid;
+    border-width: 1px;
+}
+
+.entry-description {
+    margin-bottom: 12px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Limits to 2 lines */
+    line-clamp: 2;
+    text-overflow: ellipsis;
+}

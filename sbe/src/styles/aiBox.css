@@ -1,0 +1,18 @@
+.entry-ai-container {
+    border: solid;
+    border-width: 1px;
+
+    padding: 10px;
+}
+
+.entry-ai-header {
+
+}
+
+.entry-ai-title {
+
+}
+
+.entry-ai-description {
+    white-space: pre-wrap;
+}

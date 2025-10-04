@@ -1,6 +1,5 @@
 import React, { useState, useEffect} from 'react';
 import './styles/App.css';
-import SearchBar from './components/searchbar';
 import NavBar from './components/navBar';
 // import NASASearch from './components/NASASearch';
 // import AppLogo from './assets/app_logos/bioseeker_black.png'
