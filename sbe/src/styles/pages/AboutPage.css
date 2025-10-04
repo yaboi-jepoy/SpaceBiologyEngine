@@ -1,0 +1,46 @@
+.about-content {
+    max-width: 800px;
+    margin: 16px;
+    padding: 16px;
+}
+
+.about-header {
+    font-weight: 500;
+    margin: 0;
+    padding: 0;
+}
+
+.about-content h1 {
+    margin: 0;
+    padding: 0;
+}
+
+.about-desc h3 {
+    font-size: 32px;
+    margin-bottom: 18px;
+}
+
+.about-desc p {
+    font-size: 18px;
+    text-align: justify;
+}
+
+#para1 {
+    margin: 0 0 24px 0;
+}
+
+#para2 {
+    margin: 0;
+}
+
+.team-logo {
+    max-width: 350px;
+    margin: 0;
+    padding: 0;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

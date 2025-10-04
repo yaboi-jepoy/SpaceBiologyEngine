@@ -83,8 +83,6 @@
     transform: translateY(-2px);
 } */
 
-
-
 body {
     justify-content: space-around;
     padding-top: 80px; /* Add padding for navbar */
@@ -96,7 +94,6 @@ body {
     text-align: center;
     width: 60vw;
     margin-top: 32px; /* Space below navbar */
-
     border:solid;
     border-width: 1px;
     border-radius: 12px;
@@ -104,8 +101,20 @@ body {
     padding: 14px;
 }
 
+.browse-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+}
+
 .browse-main-title {
     font-size: 3rem;
+    margin: 0;
+}
+
+.browse-subtitle {
+    margin: 12px 0 16px 0;
 }
 
 /* .categories-grid {
@@ -145,19 +154,18 @@ body {
 }
     
 .category-card {
-        
     border: solid;
     border-width: 1px;
     border-color: var(--border-color);
     border-radius: 14px;
     padding: 2px;
-    
     background-color: var(--card-bg-color);
     color: var(--text-color);
-    padding: 20px;
+    padding: 35px 20px;
     border-radius: 8px;
     box-shadow: var(--card-shadow);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
