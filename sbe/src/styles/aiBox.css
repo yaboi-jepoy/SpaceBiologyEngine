@@ -5,14 +5,11 @@
     padding: 10px;
 }
 
-.entry-ai-header {
-
+.entry-ai-description p {
+    text-align: justify;
 }
 
-.entry-ai-title {
-
-}
-
-.entry-ai-description {
-    white-space: pre-wrap;
+.ai-ref {
+    cursor: pointer;
+    color: #4A90E2;
 }

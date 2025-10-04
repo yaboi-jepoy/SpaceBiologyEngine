@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../styles/pages/ResultsPage.css';
 import SearchEntry from '../searchEntry';
@@ -9,6 +9,7 @@ import usePublications from '../../hooks/usePublications';
 
 export default function ResultsPage() {
   const location = useLocation();
+  const [highlightedId, setHighlightedId] = useState(null);
   
   // load initial query from navigation
   const initialQuery = location.state?.query || '';
@@ -39,6 +40,17 @@ export default function ResultsPage() {
   // Handle new search
   const handleSearch = async (searchQuery) => {
     await performSearch(searchQuery);
+  };
+
+  // Add this function to handle reference clicks
+  const handleReferenceClick = (refNumber) => {
+    const targetId = `pub-${refNumber}`;
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setHighlightedId(targetId);
+      setTimeout(() => setHighlightedId(null), 3000);
+    }
   };
 
   return (
@@ -82,6 +94,7 @@ export default function ResultsPage() {
             title="AI Summary"
             description={aiSummary.summary}
             tags="AI-Generated Summary"
+            onReferenceClick={handleReferenceClick} 
           />
         )}
 
@@ -98,8 +111,10 @@ export default function ResultsPage() {
         )}
 
         {results.map((entry, index) => (
-          <SearchEntry 
+          <SearchEntry
             key={entry.id || index}
+            id={`pub-${index + 1}`}
+            highlighted={highlightedId === `pub-${index + 1}`}
             title={entry.title}
             description={entry.description}
             tags={entry.tags}

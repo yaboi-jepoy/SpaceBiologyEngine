@@ -3,9 +3,12 @@ import '../styles/searchEntry.css';
 
 // .JSX FOR THE RESULTS ENTRIES
 
-export default function SearchEntry({title, description, tags, link, source, className}) {
+export default function SearchEntry({title, description, tags, link, source, className, id, highlighted}) {
     return (
-        <div className={`entry-container ${className || ''}`}>
+        <div
+          id={id}
+          className={`entry-container ${className || ''}${highlighted ? ' highlighted' : ''}`}
+        >
             {/* Title with optional link */}
             {link ? (
                 <a href={link} target="_blank" rel="noopener noreferrer" className="title-link">
