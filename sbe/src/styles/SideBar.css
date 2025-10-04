@@ -31,6 +31,12 @@
   width: 40px;
 }
 
+/* LIGHT MODE - Monochrome Navbar */
+body.light .side-bar-container {
+  background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+  border-bottom: 1px solid var(--border-color);
+}
+
 /* LIGHT MODE */
 body.light .side-bar-routes a {
   color: #000;
