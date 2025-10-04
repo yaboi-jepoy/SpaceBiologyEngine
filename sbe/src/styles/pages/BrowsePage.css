@@ -1,16 +1,17 @@
-.browse-container {
+/* .browse-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 15px;
-    min-height: 100vh;
-    width: 100vw;
+    padding-left: calc180px; /* Sidebar width (180px) + sidebar padding (32px) + extra spacing (32px) */
+    /* min-height: 100vh;
+    width: 100%; Allow full width for grid to use
     box-sizing: border-box;
-}
+} */ 
 
 /* browse section */
-.browse-content {
+/* .browse-content {
     box-sizing: border-box;
     overflow-x: hidden;
     display: flex;
@@ -18,91 +19,154 @@
     flex-direction: column;
     align-items: center;
     overflow: auto;
-    }
+    } */
 
-.categories-grid {
+/* .categories-grid {
     min-width: 100vh;
     display: flex;
     flex: 1;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-auto-rows: 160px;
-    gap: 16px;
+    /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+    /* grid-auto-rows: 160px; */
+    /* gap: 16px;
     padding: 0;
     margin: 0;
     width: 100%;
-    max-width: 1200px;
+    max-width: fit-content;
     justify-items: center;
     align-items: center;
     box-sizing: border-box;
-    overflow: hidden; /* Prevent grid overflow */
-}
+    overflow: hidden; 
+} */
 
 /* title lng */
-.browse-main-title {
+/* .browse-main-title {
     display: absolute;
     text-align: center;
-}
+    font-size: 3rem;
+} */
 
-/* eto yung sa alignment ng mga box */
-/* basta container to -jp */
-.categories-grid {
+/* Grid container - responsive card layout */
+/* .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    list-style: none;
-    grid-auto-rows: min-content; /* para stay as one pa rin yung gap ng height */
-    padding: 15px;
-    margin: 15;
-    width: 100%;
-    max-width: 1200px;
-    justify-items: center;
-    align-items: center;
-    box-sizing: border-box;
-}
+    /* RESPONSIVE GRID: 3 columns on desktop, 2 on tablet, 1 on mobile */
+    /* minmax(320px, 1fr) ensures at least 320px per card before wrapping */
+    /* grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-auto-rows: auto;
+    gap: 24px; /* Consistent gap between all cards (horizontal and vertical) */
+    /* padding: 24px;
+    margin: 0 auto;
+    width: 80%;
+    max-width: 1200px; /* Max 3 cards × 320px + gaps + padding = ~1200px */
+    /* box-sizing: border-box;
+} */ 
 
-/* eto yung sa box ng "calling card" */
-/* to yung mga anak -jp */
-.category-card {
+/* Individual category card */
+/* .category-card {
     border-radius: 12px;
-    height: 100%; /* fill grid cell row height */
+    height: 100%;
     width: 100%;
-    max-width: 320px;
     display: flex;
     flex-direction: column;
     text-align: center;
     justify-content: flex-end;
-    margin-top: 64px;
-    padding: 8px 24px;
+    padding: 24px;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
     border: 2px solid rgba(0, 0, 0, 0.1);
+} */
+
+/* .category-card:hover {
+    border: 2px solid #A991FF;
+    box-shadow: 0 8px 32px rgba(25, 118, 210, 0.25);
+    transform: translateY(-2px);
+} */
+
+
+
+body {
+    justify-content: space-around;
+    padding-top: 80px; /* Add padding for navbar */
+}
+
+.browse-container{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 60vw;
+    margin-top: 32px; /* Space below navbar */
+
+    border:solid;
+    border-width: 1px;
+    border-radius: 12px;
+
+    padding: 14px;
+}
+
+.browse-main-title {
+    font-size: 3rem;
+}
+
+/* .categories-grid {
+    justify-content: center;
+    align-items: center;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-items: stretch;
+    align-content: space-around;
+    gap: 12px;
+}
+
+.category-card {
+    align-self: center;
+
+    border: solid;
+    border-width: 1px;
+    border-radius: 14px;
+    padding: 2px;
+    
+    text-align: center;
+    
+    display: flex;
+    flex-direction: column;
+    
+    overflow: hidden;
+    transform: translateY(-0%);
+} */
+    
+.categories-grid {
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+    
+.category-card {
+        
+    border: solid;
+    border-width: 1px;
+    border-color: var(--border-color);
+    border-radius: 14px;
+    padding: 2px;
+    
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
 .category-card:hover {
-    border: 2px solid #A991FF;
-    box-shadow: 0 8px 32px rgba(25, 118, 210, 0.25);
-    transform: translateY(4px);
-}
-
-/* para nasa center column yung last item/calling card kapag odd number yung items */
-.category-list li:last-child {
-    grid-column: 2 / 3;
-}
-
-/* para dynamic yung layout if maresize yung web app - ok na to me thinks like frfr */
-@media (max-width: 900px) {
-    .browse-title {
-        font-size: 2rem;
-    }
-    .category-list {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-        gap: 1rem;
-    }
-    .category-list li {
-        font-size: 0.9rem;
-        min-width: 180px;
-        max-width: 100%;
-    }
+    background-color: var(--hover-bg);
+    color: var(--hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }

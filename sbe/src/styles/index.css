@@ -3,18 +3,73 @@
   color-scheme: light dark;
 }
 
+/* Default monochrome theme variables */
+html, body {
+  --bg-color: #ffffff;      /* Pure white background */
+  --text-color: #1a1a1a;    /* Almost black text */
+  --border-color: #e0e0e0;  /* Light gray borders */
+  --card-bg-color: #fafafa; /* Off-white cards */
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --hover-bg: #1a1a1a;      /* Almost black hover */
+  --hover-color: #ffffff;   /* White text on hover */
+}
+
+/* LIGHT MODE THEME - Clean Monochrome */
+body.light, html.light {
+  --bg-color: #ffffff !important;      /* Pure white background */
+  --text-color: #1a1a1a !important;    /* Almost black text */
+  --border-color: #e0e0e0 !important;  /* Light gray borders */
+  --card-bg-color: #fafafa !important; /* Off-white cards */
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  --hover-bg: #1a1a1a !important;      /* Almost black hover */
+  --hover-color: #ffffff !important;   /* White text on hover */
+  
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* DARK MODE THEME - Clean Monochrome */
+body.dark, html.dark {
+  --bg-color: #1a1a1a !important;      /* Almost black background */
+  --text-color: #f0f0f0 !important;    /* Almost white text */
+  --border-color: #404040 !important;  /* Dark gray borders */
+  --card-bg-color: #2a2a2a !important; /* Dark gray cards */
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+  --hover-bg: #f0f0f0 !important;      /* Almost white hover */
+  --hover-color: #1a1a1a !important;   /* Almost black text on hover */
+  
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Force theme application on all elements */
+*, *::before, *::after {
+  color: inherit;
+}
+
 a {
   font-weight: 500;
   text-decoration: inherit;
+  color: var(--text-color);
   transition: background 0.3s, color 0.3s;
+}
+
+/* Consistent black/white hover across all pages */
+a:hover {
+  background-color: var(--hover-bg);
+  color: var(--hover-color);
+  padding: 4px 8px;
+  border-radius: 6px;
 }
 
 body {
   margin: 0;
   padding: 0;
+  padding-top: 80px; /* Reserve space for fixed navbar */
   display: flex;
   min-width: 320px;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 h1 {

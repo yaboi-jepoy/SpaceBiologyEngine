@@ -1,53 +1,104 @@
+/* Navbar container - horizontal top bar */
 .side-bar-container {
   position: fixed;
   left: 0;
   top: 0;
-  width: 180px; 
-  height: 100vh;
-  padding: 32px;
+  width: 100%;
+  height: 80px; /* Navbar height */
+  padding: 16px 48px;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 9999; /* Higher z-index to stay on top of everything */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px); /* Modern glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
 }
 
+/* Navigation links - center of navbar */
 .side-bar-routes {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: row;
+  gap: 32px; /* Horizontal spacing between links */
+  align-items: center;
+  flex: 1; /* Takes up available space */
+  justify-content: center; /* Centers the navigation links */
+}
+
+/* Theme toggle container - right corner */
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes to the right */
 }
 
 .side-bar-routes a {
   display: block;
   text-decoration: none;
-  padding: 10px 0;
+  padding: 10px 16px;
   font-size: 18px;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  border-radius: 8px;
 }
 
+/* Logo section - stays on the left */
 .logo-full {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 12px;
 }
 
 .sidebar-logo {
-  width: 30px;
-  padding: 12px 8px;
+  width: 40px;
+  height: auto;
 }
 
-/* LIGHT MODE */
+/* LIGHT MODE - Monochrome Navbar */
+body.light .side-bar-container {
+  background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+  border-bottom: 1px solid var(--border-color);
+}
+
 body.light .side-bar-routes a {
-  color: #000;
+  color: var(--text-color);
 }
 
 body.light .side-bar-routes a:hover {
-  color: #A991FF;
+  color: var(--hover-color);
+  background-color: var(--hover-bg);
 }
 
-/* DARK MODE */
+/* DARK MODE - Monochrome Navbar */
+body.dark .side-bar-container {
+  background-color: rgba(26, 26, 26, 0.95); /* Semi-transparent almost black */
+  border-bottom: 1px solid var(--border-color);
+}
+
 body.dark .side-bar-routes a {
-  color: #fff;
+  color: var(--text-color);
 }
 
 body.dark .side-bar-routes a:hover {
-  color: #A991FF;
+  color: var(--hover-color);
+  background-color: var(--hover-bg);
+}
+
+/* RESPONSIVE - Mobile hamburger menu */
+@media (max-width: 768px) {
+  .side-bar-routes {
+    display: none; /* Hide links on mobile - you can add hamburger menu logic later */
+  }
+  
+  .side-bar-container {
+    padding: 16px 24px;
+    justify-content: space-between; /* Logo left, theme toggle right */
+  }
+  
+  .theme-toggle-container {
+    margin-left: 0; /* Reset margin on mobile */
+  }
 }
 
 /* .logo-text {

@@ -21,20 +21,15 @@ const categories = [
 
 const BrowsePage = ({ theme, setTheme }) => {
   return (
-    <div>
       <div className="browse-container">
         <SideBar theme={theme} setTheme={setTheme} />
-        <div className='browse-content'>
-          <h1 className="browse-main-title">Browse</h1>
-          <div className='categories-grid'>
-            {categories.map((category, index) => (
-              // loop
-              <CategoryCard title={category}/>
-            ))}
-          </div>
+        <h1 className="browse-main-title">Browse Categories</h1>
+        <div className='categories-grid'>
+          {categories.map((category, index) => (
+            <CategoryCard title={category} className={"category-card"}/>
+          ))}
         </div>
-      </div>
-    </div>
+        </div>
   );
 }
 

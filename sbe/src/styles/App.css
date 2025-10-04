@@ -11,14 +11,24 @@
   animation: fadeInScale 0.7s ease-out;
 }
 
+/* Global monochrome theme colors */
 body.light {
-  background-color: #fff;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 body.dark {
-  background-color: #000;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
-a:hover {
-  color: #7135E5;
+/* Clean monochrome hover effects */
+body.light a:hover {
+  color: var(--hover-color);
+  background-color: var(--hover-bg);
+}
+
+body.dark a:hover {
+  color: var(--hover-color);
+  background-color: var(--hover-bg);
 }

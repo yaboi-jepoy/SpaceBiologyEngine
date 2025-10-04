@@ -15,15 +15,23 @@ import AboutPage from './components/pages/AboutPage';
 import ResultsPage from './components/pages/ResultsPage';
 
 export default function App() {
-  const [theme, setTheme] = useState('light');
+  // Initialize theme from localStorage or default to 'light'
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme || 'light';
+  });
 
   useEffect(() => {
+    // Apply theme class to both html and body for better inheritance
+    document.documentElement.className = theme;
     document.body.className = theme;
+    // Save theme to localStorage for persistence
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   return (
     <Router>
-      <div className={`sbe-container ${theme}`} role='application' aria-label='Space Biology Search Engine'>
+      <div className={`sbe-container`} role='application' aria-label='Space Biology Search Engine'>
         <Routes>
           <Route path='/'
           element={<LandingPage theme={theme} setTheme={setTheme} />}
