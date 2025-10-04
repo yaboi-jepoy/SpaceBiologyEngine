@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@perplexity-ai/perplexity_ai": "^0.8.0",
     "csvtojson": "^2.0.10",
     "firebase": "^12.3.0",
     "react": "^19.1.1",

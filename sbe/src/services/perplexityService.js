@@ -1,16 +1,20 @@
 // src/services/perplexityService.js
+/**
+ * Perplexity Service - Search external NASA sites
+ */
+
 export class PerplexityService {
   constructor() {
     this.apiKey = import.meta.env.VITE_PERPLEXITY_API_KEY;
-    this.baseUrl = 'https://api.perplexity.ai/chat/completions';
+    this.searchUrl = 'https://api.perplexity.ai/search';
+    this.chatUrl = 'https://api.perplexity.ai/chat/completions';
     this._controllers = new Set();
     
-    // NASA resource domains for focused search
+    // 3 external NASA sites
     this.nasaDomains = [
-      'nasa.gov/osdr',
-      'public.ksc.nasa.gov/nslsl',
-      'taskbook.nasaprs.com',
-      'osdr.nasa.gov'
+      'science.nasa.gov',
+      'public.ksc.nasa.gov',
+      'taskbook.nasaprs.com'
     ];
   }
 
@@ -19,95 +23,33 @@ export class PerplexityService {
     this._controllers.clear();
   }
 
-  _withAbort(init = {}, timeoutMs = 20000) {
+  _withAbort(init = {}, timeoutMs = 30000) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), timeoutMs);
     this._controllers.add(controller);
+    
     const initWithSignal = { ...init, signal: controller.signal };
     const finalize = () => {
       clearTimeout(timeout);
       this._controllers.delete(controller);
     };
+    
     return { initWithSignal, finalize };
   }
 
-  async enhanceSearchQuery(userQuery) {
-    if (!this.apiKey) {
-      console.warn('Perplexity API key not found, using fallback');
-      return this.fallbackQueryEnhancement(userQuery);
-    }
-
-    try {
-      const { initWithSignal, finalize } = this._withAbort({
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'sonar',
-          messages: [
-            {
-              role: 'system',
-              content: `Return ONLY JSON with fields: originalQuery, keywords, scientificTerms, categories, tags. Focus on space biology terms.`
-            },
-            {
-              role: 'user',
-              content: `Enhance this search query: "${userQuery}"`
-            }
-          ],
-          max_tokens: 120,
-          temperature: 0.2
-        })
-      });
-      const response = await fetch(this.baseUrl, initWithSignal);
-      finalize();
-
-      if (!response.ok) {
-        throw new Error(`Perplexity API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const content = data.choices[0].message.content;
-      
-      try {
-        const parsed = JSON.parse(content);
-        return {
-          ...parsed,
-          success: true
-        };
-      } catch (parseError) {
-        console.warn('Failed to parse Perplexity response, using fallback');
-        return this.fallbackQueryEnhancement(userQuery);
-      }
-    } catch (error) {
-      console.error('Perplexity API error:', error);
-      return this.fallbackQueryEnhancement(userQuery);
-    }
-  }
-
   /**
-   * Search NASA resources using Perplexity AI with domain-specific focus
-   * This searches across OSDR, NSLSL, and Task Book databases
+   * Search external NASA sites using Chat API (avoids CORS)
    */
-  async searchNASAResources(userQuery, options = {}) {
+  async searchExternalNASA(query, options = {}) {
     if (!this.apiKey) {
       console.warn('Perplexity API key not found');
-      return {
-        success: false,
-        error: 'API key not configured',
-        fallback: true
-      };
+      return { success: false, results: [] };
     }
 
-    const {
-      maxResults = 10,
-      focusDomains = this.nasaDomains,
-      searchType = 'comprehensive' // 'comprehensive', 'publications', 'datasets', 'grants'
-    } = options;
+    const { maxResults = 10 } = options;
 
     try {
-      const domainContext = this.getDomainContext(searchType);
+      // Use Chat API instead of Search API to avoid CORS
       const { initWithSignal, finalize } = this._withAbort({
         method: 'POST',
         headers: {
@@ -119,57 +61,66 @@ export class PerplexityService {
           messages: [
             {
               role: 'system',
-              content: `Search ONLY NASA domains listed. Provide concise sections with citations.`
+              content: 'Search NASA websites and return relevant results with titles and URLs. Focus on science.nasa.gov, public.ksc.nasa.gov, and taskbook.nasaprs.com.'
             },
             {
               role: 'user',
-              content: `${domainContext}\nQuery: "${userQuery}"`
+              content: `Search NASA websites for: "${query}". Return up to ${maxResults} results with titles, URLs, and brief descriptions.`
             }
           ],
-          max_tokens: 900,
-          temperature: 0.2,
-          search_domain_filter: focusDomains,
+          max_tokens: 1500,
+          temperature: 0.3,
           return_citations: true
         })
-      }, 25000);
-      const response = await fetch(this.baseUrl, initWithSignal);
+      });
+
+      const response = await fetch(this.chatUrl, initWithSignal);
       finalize();
 
       if (!response.ok) {
-        throw new Error(`Perplexity API error: ${response.status}`);
+        throw new Error(`Chat API error: ${response.status}`);
       }
 
       const data = await response.json();
       const content = data.choices[0].message.content;
       const citations = data.citations || [];
 
+      // Format citations as results
+      const formattedResults = citations.map((citation, index) => ({
+        title: `NASA Result ${index + 1}`,
+        link: citation,
+        category: 'External NASA',
+        tags: this._extractTags(content),
+        impact: content.slice(index * 100, (index + 1) * 100) + '...',
+        source: this._getSource(citation),
+        relevance: 1 - (index * 0.1),
+        isExternal: true
+      }));
+
       return {
         success: true,
-        query: userQuery,
-        response: content,
-        citations: citations,
-        timestamp: new Date().toISOString(),
-        searchType: searchType
+        results: formattedResults
       };
     } catch (error) {
-      console.error('NASA search error:', error);
-      return {
-        success: false,
-        error: error.message,
-        query: userQuery
-      };
+      console.error('External search error:', error);
+      return { success: false, results: [] };
     }
   }
 
   /**
-   * Get specific insights about research gaps and opportunities
+   * Generate AI summary
    */
-  async analyzeResearchGaps(topic) {
-    if (!this.apiKey) {
-      return { success: false, error: 'API key not configured' };
+  async generateSummary(results, userQuery) {
+    if (!this.apiKey || !results || results.length === 0) {
+      return null;
     }
 
     try {
+      const context = results
+        .slice(0, 10)
+        .map(r => `${r.title}: ${r.impact || ''}`)
+        .join('\n\n');
+
       const { initWithSignal, finalize } = this._withAbort({
         method: 'POST',
         headers: {
@@ -179,130 +130,46 @@ export class PerplexityService {
         body: JSON.stringify({
           model: 'sonar',
           messages: [
-            { role: 'system', content: `Identify progress and gaps. Be concise. Cite NASA.` },
-            { role: 'user', content: `Topic: "${topic}"` }
+            {
+              role: 'system',
+              content: 'Summarize space biology research findings concisely.'
+            },
+            {
+              role: 'user',
+              content: `Query: "${userQuery}"\n\nResults:\n${context}`
+            }
           ],
-          max_tokens: 900,
-          temperature: 0.25,
-          search_domain_filter: this.nasaDomains
+          max_tokens: 500,
+          temperature: 0.3
         })
       });
-      const response = await fetch(this.baseUrl, initWithSignal);
+
+      const response = await fetch(this.chatUrl, initWithSignal);
       finalize();
 
-      if (!response.ok) {
-        throw new Error(`Perplexity API error: ${response.status}`);
-      }
+      if (!response.ok) return null;
 
       const data = await response.json();
       return {
         success: true,
-        topic: topic,
-        analysis: data.choices[0].message.content,
-        citations: data.citations || [],
-        timestamp: new Date().toISOString()
+        summary: data.choices[0].message.content
       };
     } catch (error) {
-      console.error('Gap analysis error:', error);
-      return {
-        success: false,
-        error: error.message
-      };
-    }
-  }
-
-  /**
-   * Get domain-specific context for different search types
-   */
-  getDomainContext(searchType) {
-    const contexts = {
-      comprehensive: 'Search across all NASA resources for comprehensive information including experiments, publications, and funded projects.',
-      publications: 'Focus on scientific publications and literature from the NASA Space Life Sciences Library.',
-      datasets: 'Focus on experimental data and datasets from the NASA Open Science Data Repository.',
-      grants: 'Focus on funded research projects and grants from the NASA Task Book.'
-    };
-    return contexts[searchType] || contexts.comprehensive;
-  }
-
-  /**
-   * Extract structured data from NASA search results
-   */
-  async extractStructuredData(searchResults) {
-    if (!this.apiKey || !searchResults.response) {
-      return null;
-    }
-
-    try {
-      const { initWithSignal, finalize } = this._withAbort({
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'sonar',
-          messages: [
-            { role: 'system', content: `Return ONLY valid JSON with fields: experiments, publications, datasets, keyFindings, researchGaps, categories.` },
-            { role: 'user', content: `${searchResults.response}` }
-          ],
-          max_tokens: 600,
-          temperature: 0.1
-        })
-      });
-      const response = await fetch(this.baseUrl, initWithSignal);
-      finalize();
-
-      if (!response.ok) {
-        throw new Error(`Extraction error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const content = data.choices[0].message.content;
-      
-      try {
-        return JSON.parse(content);
-      } catch (parseError) {
-        console.warn('Failed to parse structured data');
-        return null;
-      }
-    } catch (error) {
-      console.error('Structured data extraction error:', error);
+      console.error('Summary error:', error);
       return null;
     }
   }
 
-  fallbackQueryEnhancement(query) {
-    // Simple fallback enhancement
-    const words = query.toLowerCase()
-      .split(/\s+/)
-      .filter(word => word.length > 2)
-      .filter(word => !['the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'].includes(word));
-    
-    // Add common space biology synonyms
-    const synonymMap = {
-      'space': ['microgravity', 'orbital', 'astronaut', 'cosmic'],
-      'bone': ['skeletal', 'osteo', 'calcium'],
-      'muscle': ['muscular', 'atrophy', 'strength'],
-      'cell': ['cellular', 'biology', 'growth'],
-      'plant': ['botanical', 'agriculture', 'photosynthesis']
-    };
+  _getSource(url) {
+    if (url.includes('science.nasa.gov')) return 'NASA Science';
+    if (url.includes('ksc.nasa.gov')) return 'NASA KSC';
+    if (url.includes('taskbook')) return 'NASA Task Book';
+    return 'NASA External';
+  }
 
-    let enhancedKeywords = [...words];
-    words.forEach(word => {
-      if (synonymMap[word]) {
-        enhancedKeywords.push(...synonymMap[word]);
-      }
-    });
-
-    return {
-      originalQuery: query,
-      keywords: enhancedKeywords,
-      scientificTerms: words,
-      categories: [],
-      tags: words,
-      success: false,
-      fallback: true
-    };
+  _extractTags(content) {
+    const keywords = ['microgravity', 'space', 'ISS', 'experiment', 'biology', 'research'];
+    return keywords.filter(k => content.toLowerCase().includes(k)).join(', ');
   }
 }
 

@@ -1,68 +1,111 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import '../../styles/pages/ResultsPage.css';
 import SearchEntry from '../searchEntry';
 import SearchBar from '../searchBar';
 import AiBox from '../aiBox';
+import useEnhancedSearch from '../../hooks/useEnhancedSearch';
+import usePublications from '../../hooks/usePublications';
 
 export default function ResultsPage() {
-  // REPLACE WITH ACTUAL FUNCTION
-  // THESE ARE JUST DUMMY DATA FOR STYLING
-  const searchQuery = {};
-  const testEntries = [
-    {
-      title: "Microgravity Effects on Plant Growth",
-      description: "A comprehensive study examining how reduced gravity conditions affect cellular development in Arabidopsis thaliana during space missions.",
-      tags: "microgravity, plant biology, space research"
-      
-    },
-    {
-      title: "Radiation Exposure in Deep Space",
-      description: "Analysis of cosmic radiation impact on biological systems during long-duration space flights to Mars and beyond.",
-      tags: "radiation, DNA damage, space medicine"
-    },
-    {
-      title: "Bone Density Loss in Astronauts",
-      description: "Research on calcium absorption and bone mineral density changes in crew members during extended stays on the International Space Station.",
-      tags: "bone health, calcium, ISS research"
-    },
-    {
-      title: "Protein Crystallization in Space",
-      description: "Investigation of protein crystal growth in microgravity conditions to improve pharmaceutical research and drug development.",
-      tags: "protein research, crystallization, pharmaceuticals"
-    },
-    {
-      title: "Sleep Patterns in Space Missions",
-      description: "Study of circadian rhythms and sleep quality in astronauts during long-duration space flights.",
-      tags: "sleep research, circadian rhythm, astronaut health"
+  const location = useLocation();
+  
+  // load initial query from navigation
+  const initialQuery = location.state?.query || '';
+  
+  // get publications
+  const { publications } = usePublications();
+  
+  // Use search hook
+  const { 
+    query, 
+    setQuery, 
+    results,
+    loading,
+    error,
+    aiSummary,
+    searchStats,
+    performSearch 
+  } = useEnhancedSearch(publications);
+
+  // Perform search on mount
+  React.useEffect(() => {
+    if (initialQuery && publications.length > 0) {
+      setQuery(initialQuery);
+      performSearch(initialQuery);
     }
-  ];
+  }, [initialQuery, publications.length]);
+
+  // Handle new search
+  const handleSearch = async (searchQuery) => {
+    await performSearch(searchQuery);
+  };
 
   return (
     <div className="results-container">
       <div className="results-header">
         <SearchBar 
-          query={""}
-          className={"results-searchbar-input"}
-          ariaLabel={"results-searchbar"}
-          placeholder={"placeholder"}
+          query={query}
+          onQueryChange={setQuery}
+          onSearch={handleSearch}
+          placeholder="Search the NASA Biology Database..."
+          ariaLabel="Search space biology publications"
+          loading={loading}
         />
-        <p className='results-header-text'>Here are the search results for </p>
-        <p className='results-header-subtext'> ({testEntries.length} entries)</p>
+        
+        {query && (
+          <div className="results-info">
+            <p className='results-header-text'>
+              {loading ? 'Searching...' : `Search results for "${query}"`}
+            </p>
+            {searchStats && (
+              <p className='results-header-subtext'>
+                {searchStats.resultCount} results • {searchStats.searchTime}ms
+                {searchStats.cached && ' (cached)'}
+                {searchStats.hasAI && ' • AI Enhanced'}
+                {!searchStats.hasExternal && searchStats.localCount > 0 && ' • Local Database Only'}
+              </p>
+            )}
+          </div>
+        )}
       </div>
       
+      {error && (
+        <div className="results-error">
+          <p>❌ {error}</p>
+        </div>
+      )}
+
       <div className="results-list">
-        <AiBox 
-          title={"What is Love?"}
-          description={'Maeilgachi yeonghwa sogeseona,\nChaek sogeseona,\nDeurama sogeseo sarangeul neukkyeo \nMmm, sarangeul baewo'}
-          tags={"twice, what is love, jyp"}
-        />
-        {testEntries.map((entry, index) => (
+        {aiSummary && (
+          <AiBox 
+            title="AI Summary"
+            description={aiSummary.summary}
+            tags="AI-Generated Summary"
+          />
+        )}
+
+        {loading && (
+          <div className="results-loading">
+            <p>🔍 Searching...</p>
+          </div>
+        )}
+
+        {!loading && results.length === 0 && query && (
+          <div className="results-empty">
+            <p>No results found for "{query}"</p>
+          </div>
+        )}
+
+        {results.map((entry, index) => (
           <SearchEntry 
-            key={index}
+            key={entry.id || index}
             title={entry.title}
             description={entry.description}
             tags={entry.tags}
-            className = "results-entry"
+            link={entry.link}
+            source={entry.source}
+            className="results-entry"
           />
         ))}
       </div>

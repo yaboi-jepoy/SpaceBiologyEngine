@@ -9,19 +9,32 @@ export default function usePublications(searchTerm = "") {
 
   useEffect(() => {
     async function fetchData() {
+      console.log('🔄 Starting to fetch publications...');
       setLoading(true);
-      const querySnapshot = await getDocs(collection(db, "publications"));
-      let data = querySnapshot.docs.map(doc => doc.data());
-      if (searchTerm) {
-        const term = searchTerm.toLowerCase();
-        data = data.filter(
-          pub =>
-            pub.Title.toLowerCase().includes(term) ||
-            pub.Link.toLowerCase().includes(term)
-        );
+      
+      try {
+        const querySnapshot = await getDocs(collection(db, "publications"));
+        console.log('✅ Firestore query success! Documents:', querySnapshot.size);
+        
+        let data = querySnapshot.docs.map(doc => doc.data());
+        console.log('📊 Publications fetched:', data.length);
+        
+        if (searchTerm) {
+          const term = searchTerm.toLowerCase();
+          data = data.filter(
+            pub =>
+              pub.Title.toLowerCase().includes(term) ||
+              pub.Link.toLowerCase().includes(term)
+          );
+        }
+        
+        setPublications(data);
+        setLoading(false);
+        console.log('✅ Publications loaded successfully!');
+      } catch (error) {
+        console.error('❌ Error fetching publications:', error);
+        setLoading(false);
       }
-      setPublications(data);
-      setLoading(false);
     }
     fetchData();
   }, [searchTerm]);

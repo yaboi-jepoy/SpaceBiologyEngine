@@ -1,0 +1,117 @@
+/* Search Entry Styles */
+
+.entry-container {
+  background: var(--entry-bg, #ffffff);
+  border: 1px solid var(--entry-border, #e0e0e0);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.entry-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  border-color: var(--entry-border-hover, #4A90E2);
+}
+
+/* Title */
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--title-color, #1a1a1a);
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.title-link:hover .title {
+  color: var(--link-color, #4A90E2);
+  text-decoration: underline;
+}
+
+/* Description */
+.entry-description {
+  font-size: 0.95rem;
+  color: var(--description-color, #555);
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  max-height: 4.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Source Badge */
+.entry-source {
+  display: inline-block;
+  background: var(--source-bg, #f0f0f0);
+  color: var(--source-color, #666);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Tags Container */
+.entry-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--tag-bg, #e8f4ff);
+  color: var(--tag-color, #0066cc);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: var(--tag-hover-bg, #d0e8ff);
+  transform: scale(1.05);
+}
+
+/* Dark mode support */
+body.dark .entry-container {
+  --entry-bg: #2a2a2a;
+  --entry-border: #404040;
+  --entry-border-hover: #5A9FE2;
+  --title-color: #e0e0e0;
+  --description-color: #b0b0b0;
+  --source-bg: #404040;
+  --source-color: #b0b0b0;
+  --tag-bg: #1a3a5a;
+  --tag-color: #6db3ff;
+  --tag-hover-bg: #2a4a6a;
+  --link-color: #6db3ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .entry-container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .entry-description {
+    font-size: 0.9rem;
+  }
+}
