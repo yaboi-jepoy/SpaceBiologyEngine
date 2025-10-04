@@ -26,7 +26,9 @@ const LandingPage = ({ theme, setTheme }) => {
         </div>
         {/* SEARCHBAR */}
         {/* PUT COMPONENT HERE */}
-        <SearchBar theme={theme} setTheme={setTheme} />
+        <SearchBar theme={theme} setTheme={setTheme} 
+          placeholder={"Search the NASA Biology Database..."}
+        />
       </div>
     </div>
   );
