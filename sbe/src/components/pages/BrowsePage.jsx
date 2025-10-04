@@ -16,11 +16,11 @@ const categories = [
   'Stem Cell Research',
 ];
 
-export default function BrowsePage() {
+const BrowsePage = ({ theme, setTheme }) => {
   return (
     <div className='browse-page'>
       <div className='browse-sidebar'>
-        <SideBar />
+        <SideBar theme={theme} setTheme={setTheme} />
       </div>
       <div className="browse-container">
         <h2 className="browse-title">Biology Categories</h2>
@@ -33,3 +33,5 @@ export default function BrowsePage() {
     </div>
   );
 }
+
+export default BrowsePage;
