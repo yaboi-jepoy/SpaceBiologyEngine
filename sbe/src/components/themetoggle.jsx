@@ -41,9 +41,6 @@ const ToggleTheme = ({ theme, setTheme }) => {
         alt={`${theme === 'light' ? 'Dark' : 'Light'} mode icon`}
         className="theme-icon"
       />
-      <span className="theme-text">
-        {theme === 'light' ? "Dark Mode" : "Light Mode"}
-      </span>
     </button>
   );
 };

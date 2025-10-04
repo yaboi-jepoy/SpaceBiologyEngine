@@ -19,24 +19,23 @@ const categories = [
   'Stem Cell Research',
 ];
 
-export default function BrowsePage({theme, setTheme}) {
+const BrowsePage = ({ theme, setTheme }) => {
   return (
-    <div className="browse-page-container">
-      <div className='browse-sidebar'>
+    <div>
+      <div className="browse-container">
         <SideBar theme={theme} setTheme={setTheme} />
-      </div>
-      
-      <div className='browse-content'>
-        <h1 className="browse-main-title">Browse Biology Categories</h1>
-        <div className='categories-grid'>
-          {categories.map((category, index) => (
-            // loop
-            <CategoryCard 
-              title={category}
-            />
-          ))}
+        <div className='browse-content'>
+          <h1 className="browse-main-title">Browse</h1>
+          <div className='categories-grid'>
+            {categories.map((category, index) => (
+              // loop
+              <CategoryCard title={category}/>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+export default BrowsePage;

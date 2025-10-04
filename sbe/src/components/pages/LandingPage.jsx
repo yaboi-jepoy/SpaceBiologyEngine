@@ -4,6 +4,7 @@ import '../../styles/pages/LandingPage.css';    // NEW CSS
 import SideBar from '../SideBar'; // import sidebar
 import blackLogo from '../../assets/app_logos/bioseeker_black.png';
 import whiteLogo from '../../assets/app_logos/bioseeker_white.png';
+import SearchBar from '../searchBar'
 // import FloatingButton from '../floatingButton';
 
 const LandingPage = ({ theme, setTheme }) => {
@@ -25,6 +26,7 @@ const LandingPage = ({ theme, setTheme }) => {
         </div>
         {/* SEARCHBAR */}
         {/* PUT COMPONENT HERE */}
+        <SearchBar theme={theme} setTheme={setTheme} />
       </div>
     </div>
   );

@@ -32,6 +32,24 @@
   padding: 12px 8px;
 }
 
+/* LIGHT MODE */
+body.light .side-bar-routes a {
+  color: #000;
+}
+
+body.light .side-bar-routes a:hover {
+  color: #A991FF;
+}
+
+/* DARK MODE */
+body.dark .side-bar-routes a {
+  color: #fff;
+}
+
+body.dark .side-bar-routes a:hover {
+  color: #A991FF;
+}
+
 /* .logo-text {
   display: flex;
   flex-direction: column;
@@ -49,8 +67,3 @@
   font-size: 10px;
   margin: 0;
 } */
-
-.theme-toggle-btn {
-  width: 30px;
-  margin-top: 20px;
-}
