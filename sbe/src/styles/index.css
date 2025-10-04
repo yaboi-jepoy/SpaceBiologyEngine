@@ -9,6 +9,14 @@ a {
   transition: background 0.3s, color 0.3s;
 }
 
+
+/* Consistent black/white hover across all pages */
+a:hover {
+  background-color: var(--hover-bg);
+  color: var(--hover-color);
+  border-radius: 6px;
+}
+
 body {
   margin: 0;
   padding: 0;
