@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../styles/pages/ResultsPage.css';
 import SearchEntry from '../searchEntry';
 import SearchBar from '../searchBar';
 import AiBox from '../aiBox';
+import PublicationModal from '../PublicationModal';
 import useEnhancedSearch from '../../hooks/useEnhancedSearch';
 import usePublications from '../../hooks/usePublications';
+import perplexityService from '../../services/perplexityService';
 import blackLogo from '../../assets/app_logos/bioseeker_black.png';
 import whiteLogo from '../../assets/app_logos/bioseeker_white.png';
 import SideBar from '../SideBar';
 
 const ResultsPage = ({ theme, setTheme }) => {
   const location = useLocation();
+  const [selectedPublication, setSelectedPublication] = useState(null);
+  const [publicationAnalysis, setPublicationAnalysis] = useState(null);
+  const [analyzingPublication, setAnalyzingPublication] = useState(false);
   
   // load initial query from navigation
   const initialQuery = location.state?.query || '';
@@ -44,6 +49,24 @@ const ResultsPage = ({ theme, setTheme }) => {
     await performSearch(searchQuery);
   };
 
+  // Handle publication click
+  const handlePublicationClick = async (publication) => {
+    setSelectedPublication(publication);
+    setPublicationAnalysis(null);
+    setAnalyzingPublication(true);
+
+    const analysis = await perplexityService.analyzePublication(publication);
+    setPublicationAnalysis(analysis);
+    setAnalyzingPublication(false);
+  };
+
+  // Handle modal close
+  const handleCloseModal = () => {
+    setSelectedPublication(null);
+    setPublicationAnalysis(null);
+    setAnalyzingPublication(false);
+  };
+
   return (
     <div className="results-container">
      <SideBar theme={theme} setTheme={setTheme} />
@@ -72,7 +95,7 @@ const ResultsPage = ({ theme, setTheme }) => {
                 {searchStats.resultCount} results • {searchStats.searchTime}ms
                 {searchStats.cached && ' (cached)'}
                 {searchStats.hasAI && ' • AI Enhanced'}
-                {!searchStats.hasExternal && searchStats.localCount > 0 && ' • Publications Only'}
+                {!searchStats.hasExternal && searchStats.localCount > 0 && ' • Local Database Only'}
               </p>
             )}
           </div>
@@ -113,8 +136,8 @@ const ResultsPage = ({ theme, setTheme }) => {
             key={entry.id || index} 
             id={entry.scrollId || `result-${index}`} 
             className="scroll-target results-entry-box"
-            onClick={() => entry.link && window.open(entry.link, '_blank')}
-            style={{ cursor: entry.link ? 'pointer' : 'default' }}
+            onClick={() => handlePublicationClick(entry)}
+            style={{ cursor: 'pointer' }}
           >
             <SearchEntry 
               title={entry.title}
@@ -128,6 +151,16 @@ const ResultsPage = ({ theme, setTheme }) => {
           </div>
         ))}
       </div>
+
+      {/* Publication Analysis Modal */}
+      {selectedPublication && (
+        <PublicationModal
+          publication={selectedPublication}
+          analysis={publicationAnalysis}
+          loading={analyzingPublication}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

@@ -172,9 +172,9 @@ ONLY include results from NASA domains. Reject Wikipedia or non-NASA sources.`
   }
 
   /**
-   * Generate AI summary
+   * Generate AI summary (answer for questions, overview for topics)
    */
-  async generateSummary(results, userQuery) {
+  async generateSummary(results, userQuery, isQuestion = false) {
     if (!this.apiKey || !results || results.length === 0) {
       return null;
     }
@@ -184,6 +184,14 @@ ONLY include results from NASA domains. Reject Wikipedia or non-NASA sources.`
         .slice(0, 10)
         .map((r, index) => `[${index + 1}] ${r.title}${r.description ? ': ' + r.description : ''}${r.impact ? ' Impact: ' + r.impact : ''}`)
         .join('\n\n');
+
+      const systemPrompt = isQuestion
+        ? `You are a NASA space biology expert assistant. Answer user questions directly and conversationally using the provided research data.\n\n**FORMATTING:**\n- Answer the question directly\n- Use **bold** for key terms\n- Use [1], [2] references\n- Be clear and concise`
+        : `You are a NASA space biology expert. Provide a brief overview of the research topic using the provided data.\n\n**FORMATTING:**\n- Summarize the main research areas\n- Use **bold** for key terms\n- Use [1], [2] references\n- Keep it concise`;
+
+      const userPrompt = isQuestion
+        ? `Question: "${userQuery}"\n\nResearch:\n${context}\n\nAnswer directly with references [1], [2], etc.`
+        : `Topic: "${userQuery}"\n\nResearch:\n${context}\n\nProvide a brief overview of the research in this area with references [1], [2], etc.`;
 
       const { initWithSignal, finalize } = this._withAbort({
         method: 'POST',
@@ -196,14 +204,14 @@ ONLY include results from NASA domains. Reject Wikipedia or non-NASA sources.`
           messages: [
             {
               role: 'system',
-              content: `You are a NASA space biology expert assistant. Answer user questions directly and conversationally using the provided research data.\n\n**FORMATTING REQUIREMENTS:**\n- Answer the question directly in a clear, conversational tone\n- Use **bold text** for key terms and important findings\n- Use *italics* for scientific names and emphasis\n- Use numbered references [1], [2], etc. to cite specific studies\n- Structure your answer with bullet points for clarity\n- Focus on space biology, microgravity effects, and mission implications\n- If it's a question, provide a direct answer first, then supporting details`
+              content: systemPrompt
             },
             {
               role: 'user',
-              content: `User Question: "${userQuery}"\n\nRelevant Research Data:\n${context}\n\nAnswer the user's question directly using the research data above. Structure your answer as:\n\n1. Direct answer to their question\n2. Key supporting evidence with references [1], [2], etc.\n3. Additional relevant findings\n4. Practical implications for space missions\n\nUse references [1], [2], [3] etc. to cite specific studies from the research data.`
+              content: userPrompt
             }
           ],
-          max_tokens: 500,
+          max_tokens: 400,
           temperature: 0.3
         })
       });
@@ -284,6 +292,68 @@ ONLY include results from NASA domains. Reject Wikipedia or non-NASA sources.`
 
   _extractTags(content) {
     return this._extractTagsFromText(content);
+  }
+
+  /**
+   * Analyze a single publication for gaps and findings
+   */
+  async analyzePublication(publication) {
+    if (!this.apiKey || !publication) {
+      return null;
+    }
+
+    try {
+      const publicationInfo = `Title: ${publication.title}\nCategory: ${publication.category || 'N/A'}\nDescription: ${publication.description || publication.impact || 'N/A'}`;
+
+      const { initWithSignal, finalize } = this._withAbort({
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'sonar',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a NASA space biology research analyst. Analyze publications and identify key findings and research gaps concisely.'
+            },
+            {
+              role: 'user',
+              content: `Analyze this NASA space biology publication:\n\n${publicationInfo}\n\nProvide a brief analysis in this format:\n\n**Summary:** (2-3 sentences overview)\n\n**Key Findings:**\n• Finding 1\n• Finding 2\n• Finding 3\n\n**Research Gaps:**\n• Gap 1 (what wasn't studied)\n• Gap 2 (limitations)\n• Gap 3 (unanswered questions)\n\nBe concise and specific.`
+            }
+          ],
+          max_tokens: 400,
+          temperature: 0.3
+        })
+      });
+
+      const response = await fetch(this.chatUrl, initWithSignal);
+      finalize();
+
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      let content = data.choices[0].message.content;
+
+      // Remove citation numbers [1], [2], etc.
+      content = content.replace(/\[\d+\]/g, '');
+
+      // Parse the response into sections
+      const summaryMatch = content.match(/\*\*Summary:\*\*\s*(.+?)(?=\*\*Key Findings:|$)/s);
+      const findingsMatch = content.match(/\*\*Key Findings:\*\*\s*(.+?)(?=\*\*Research Gaps:|$)/s);
+      const gapsMatch = content.match(/\*\*Research Gaps:\*\*\s*(.+?)$/s);
+
+      return {
+        success: true,
+        summary: summaryMatch ? summaryMatch[1].trim() : content,
+        findings: findingsMatch ? findingsMatch[1].trim() : null,
+        gaps: gapsMatch ? gapsMatch[1].trim() : null
+      };
+    } catch (error) {
+      console.error('Publication analysis error:', error);
+      return null;
+    }
   }
 
   _cleanAIResponse(text) {
