@@ -88,9 +88,9 @@ const ResultsPage = ({ theme, setTheme }) => {
       <div className="results-list">
         {aiSummary && (
           <AiBox 
-            title="AI Answer"
+            title={aiSummary.isQuestion ? "AI Answer" : "AI Overview"}
             description={aiSummary.summary}
-            tags="AI-Generated Answer"
+            tags={aiSummary.isQuestion ? "AI-Generated Answer" : "AI-Generated Overview"}
             results={results}
             loading={aiSummary.loading}
           />

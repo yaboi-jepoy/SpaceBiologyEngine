@@ -31,14 +31,15 @@ export function useEnhancedSearch(publications = []) {
 
     const startTime = Date.now();
 
-    // Check if query is a question and show AI loading box IMMEDIATELY
-    const isQuestion = /^(what|why|how|when|where|who|which|can|does|do|is|are|will|would|could|should)\b/i.test(searchQuery.trim()) 
-                      || searchQuery.trim().endsWith('?');
+    // Check if query is a question
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const isQuestion = /^(what|why|how|when|where|who|which|can|does|do|is|are|will|would|could|should)\b/i.test(trimmedQuery) 
+                      || trimmedQuery.endsWith('?')
+                      || /\b(what|why|how|when|where|who|which)\b/.test(trimmedQuery);
     
-    if (isQuestion) {
-      console.log('Question detected, showing AI loading box immediately');
-      setAiSummary({ success: true, summary: 'loading', loading: true });
-    }
+    // Show AI loading box IMMEDIATELY for all searches
+    console.log(isQuestion ? 'Question detected, showing AI answer loading...' : 'Topic search, showing AI overview loading...');
+    setAiSummary({ success: true, summary: 'loading', loading: true, isQuestion });
 
     try {
       // Check cache first
@@ -103,27 +104,25 @@ export function useEnhancedSearch(publications = []) {
       // Update UI with combined results
       setResults(resultsWithIds);
 
-      // STEP 4: Generate AI answer (only for questions)
+      // STEP 4: Generate AI content (answer for questions, overview for topics)
       let hasAISummary = false;
       let aiSummary = null;
       
-      if (isQuestion) {
-        console.log('Generating AI answer for question...');
-        
-        try {
-          aiSummary = await perplexityService.generateSummary(combinedResults, searchQuery);
-          if (aiSummary?.success) {
-            setAiSummary(aiSummary);
-            hasAISummary = true;
-            console.log('AI answer generated successfully');
-          } else {
-            console.log('AI answer not available');
-            setAiSummary(null);
-          }
-        } catch (summaryErr) {
-          console.warn('AI answer failed:', summaryErr.message);
+      console.log(isQuestion ? 'Generating AI answer for question...' : 'Generating AI overview...');
+      
+      try {
+        aiSummary = await perplexityService.generateSummary(combinedResults, searchQuery, isQuestion);
+        if (aiSummary?.success) {
+          setAiSummary({ ...aiSummary, isQuestion });
+          hasAISummary = true;
+          console.log(isQuestion ? 'AI answer generated successfully' : 'AI overview generated successfully');
+        } else {
+          console.log('AI content not available');
           setAiSummary(null);
         }
+      } catch (summaryErr) {
+        console.warn('AI content failed:', summaryErr.message);
+        setAiSummary(null);
       }
 
       // Cache everything
