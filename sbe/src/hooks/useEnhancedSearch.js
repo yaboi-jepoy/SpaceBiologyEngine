@@ -58,30 +58,51 @@ export function useEnhancedSearch(publications = []) {
       
       try {
         const externalSearch = await perplexityService.searchExternalNASA(searchQuery);
+        console.log('🔍 External search response:', externalSearch);
+        
         if (externalSearch.success && externalSearch.results.length > 0) {
           externalResults = externalSearch.results;
           hasExternalSearch = true;
           console.log('✅ External search successful:', externalResults.length, 'results');
+          console.log('📋 Sample external result:', externalResults[0]);
+          console.log('🔍 All external results:', externalResults);
         } else {
-          console.log('ℹ️ No external results found');
+          console.log('ℹ️ No external results found. Reason:', externalSearch.error || 'No results returned');
+          console.log('🔍 Full external search response:', externalSearch);
         }
       } catch (extErr) {
         console.warn('⚠️ External search failed (CORS or API issue), using local only:', extErr.message);
+        console.log('🔧 Suggestion: Check API key and network connectivity');
         // Continue with local results only
       }
 
       // STEP 3: Combine results
+      console.log('🔄 Before combining - Local:', formattedLocal.length, 'External:', externalResults.length);
       const combinedResults = contentSearchService.combineResults(formattedLocal, externalResults);
-      setResults(combinedResults);
+      
+      // Add unique IDs for scroll-to functionality
+      const resultsWithIds = combinedResults.map((result, index) => ({
+        ...result,
+        id: `result-${index}`,
+        scrollId: `result-${index}`
+      }));
+      
+      console.log('✅ Combined results:', resultsWithIds.length, 'total');
+      console.log('📋 Sample combined result:', resultsWithIds[0]);
+      console.log('🔍 External results in final list:', resultsWithIds.filter(r => r.source?.includes('External') || r.category?.includes('External')).length);
+      
+      // Update UI with combined results
+      setResults(resultsWithIds);
 
       // STEP 4: Generate AI summary (optional - may have CORS issues)
       console.log('🤖 Generating AI summary...');
       let hasAISummary = false;
       
+      let aiSummary = null;
       try {
-        const summary = await perplexityService.generateSummary(combinedResults, searchQuery);
-        if (summary?.success) {
-          setAiSummary(summary);
+        aiSummary = await perplexityService.generateSummary(combinedResults, searchQuery);
+        if (aiSummary?.success) {
+          setAiSummary(aiSummary);
           hasAISummary = true;
           console.log('✅ AI summary generated successfully');
         } else {
@@ -95,7 +116,7 @@ export function useEnhancedSearch(publications = []) {
       // Cache everything
       const cacheData = {
         results: combinedResults,
-        aiSummary: hasAISummary ? summary : null,
+        aiSummary: hasAISummary ? aiSummary : null,
         stats: {
           resultCount: combinedResults.length,
           localCount: formattedLocal.length,

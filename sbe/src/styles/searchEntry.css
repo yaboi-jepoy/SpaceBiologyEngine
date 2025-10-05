@@ -34,6 +34,46 @@
   text-decoration: underline;
 }
 
+/* Link Display */
+.entry-link-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.link-url {
+  color: var(--link-color, #4A90E2);
+  font-weight: 500;
+}
+
+/* No Link Notice */
+.no-link-notice {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #666);
+  font-style: italic;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--background-secondary, #f8f9fa);
+  border-radius: 4px;
+  border-left: 3px solid var(--warning-color, #ffc107);
+}
+
+.link-arrow {
+  color: var(--link-color, #4A90E2);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.link-arrow:hover {
+  background-color: var(--link-hover-bg, rgba(74, 144, 226, 0.1));
+}
+
 /* Description */
 .entry-description {
   font-size: 0.95rem;
@@ -49,6 +89,27 @@
   -webkit-box-orient: vertical;
 }
 
+/* Markdown formatting in titles and descriptions */
+.title strong,
+.entry-description strong {
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.title em,
+.entry-description em {
+  font-style: italic;
+  color: var(--text-emphasis, #2c5aa0);
+}
+
+/* Metadata container */
+.entry-metadata {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
 /* Source Badge */
 .entry-source {
   display: inline-block;
@@ -58,7 +119,19 @@
   font-weight: 500;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Relevance Score */
+.entry-relevance {
+  display: inline-block;
+  background: var(--relevance-bg, #e8f5e8);
+  color: var(--relevance-color, #2d7d2d);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }

@@ -82,6 +82,7 @@ export default function ResultsPage() {
             title="AI Summary"
             description={aiSummary.summary}
             tags="AI-Generated Summary"
+            results={results}
           />
         )}
 
@@ -98,15 +99,17 @@ export default function ResultsPage() {
         )}
 
         {results.map((entry, index) => (
-          <SearchEntry 
-            key={entry.id || index}
-            title={entry.title}
-            description={entry.description}
-            tags={entry.tags}
-            link={entry.link}
-            source={entry.source}
-            className="results-entry"
-          />
+          <div key={entry.id || index} id={entry.scrollId || `result-${index}`} className="scroll-target">
+            <SearchEntry 
+              title={entry.title}
+              description={entry.description}
+              tags={entry.tags}
+              link={entry.link}
+              source={entry.source}
+              relevanceScore={entry.relevanceScore || entry.adjustedScore}
+              className="results-entry"
+            />
+          </div>
         ))}
       </div>
     </div>
