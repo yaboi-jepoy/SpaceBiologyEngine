@@ -64,3 +64,8 @@ FEATURES.md
 *.njsproj
 *.sln
 *.sw?
+sbe/.firebase/hosting.ZGlzdA.cache
+sbe/.firebaserc
+sbe/firebase.json
+sbe/firestore.indexes.json
+sbe/firestore.rules
