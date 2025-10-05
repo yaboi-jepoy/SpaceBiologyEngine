@@ -72,7 +72,7 @@ const ResultsPage = ({ theme, setTheme }) => {
                 {searchStats.resultCount} results • {searchStats.searchTime}ms
                 {searchStats.cached && ' (cached)'}
                 {searchStats.hasAI && ' • AI Enhanced'}
-                {!searchStats.hasExternal && searchStats.localCount > 0 && ' • Local Database Only'}
+                {!searchStats.hasExternal && searchStats.localCount > 0 && ' • Publications Only'}
               </p>
             )}
           </div>
