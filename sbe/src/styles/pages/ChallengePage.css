@@ -1,0 +1,89 @@
+p {
+    font-size: 18px;
+    text-align: justify;
+    line-height: 1.8;
+}
+
+h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.challenge-page-content {
+    max-width: 800px;
+    margin: 16px;
+    padding: 16px;
+}
+
+.challenge-content h3 {
+    font-weight: 500;
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+
+.challenge-content h1 {
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+
+.challenge-desc {
+    margin-top: 42px;
+}
+
+.challenge-desc p {
+    margin: 0;
+    padding: 0;
+}
+
+.solution-section {
+    max-width: 800px;
+    margin-top: 100px;
+}
+
+.solution-logo-full {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.solution-logo {
+    max-width: 250px;
+    margin: 0 24px 0 0; 
+    padding: 0;
+}
+
+.app-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-name {
+    font-size: 72px;
+    margin: 0 0 12px 0;
+}
+
+.by-team {
+    font-size: 32px;
+    margin: 0;
+    padding: 0;
+}
+
+.solution-desc {
+    margin: 0;
+}
+
+.solution-text {
+    display: flex;
+}
+
+#challenge-text {
+    margin: 0 0 24px 0;
+}
+
+.see-challenge {
+    padding: 10px 16px;
+    font-size: 18px;
+    border-radius: 8px;
+}

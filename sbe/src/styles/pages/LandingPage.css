@@ -12,7 +12,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
 
     min-height: 80vh;
@@ -25,14 +24,13 @@ body {
     max-width: 250px;
 }
 
+.landing-logo {
+    max-width: 250px;
+}
+
 .nasa-title {
     font-size: 2.5em;
     margin: 0 0 10px 0;
-}
-
-.nasa-search-header {
-    text-align: center;
-    margin-bottom: 30px;
 }
 
 .nasa-subtitle {

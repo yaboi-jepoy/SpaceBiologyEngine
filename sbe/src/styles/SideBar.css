@@ -52,7 +52,12 @@
 
 .sidebar-logo {
   width: 40px;
-  height: auto;
+}
+
+/* LIGHT MODE - Monochrome Navbar */
+body.light .side-bar-container {
+  background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* LIGHT MODE - Monochrome Navbar */
