@@ -186,7 +186,7 @@ export class ContentSearchService {
         category: category || 'Space Biology',
         tags: pub.Tags || pub.tags || 'research, space biology',
         impact: impact,
-        source: 'Local Database',
+        source: 'Publication',
         relevanceScore: pub.relevanceScore || 0
       };
       
