@@ -41,7 +41,11 @@ const BrowsePage = ({ theme, setTheme }) => {
         </p>
         <div className='categories-grid'>
           {categories.map((category, index) => (
-            <CategoryCard title={category} className={"category-card"}/>
+            <CategoryCard 
+              key={index}
+              title={category} 
+              onClick={handleCategoryClick}
+            />
           ))}
         </div>
       </div>
