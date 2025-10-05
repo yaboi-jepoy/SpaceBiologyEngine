@@ -196,11 +196,11 @@ ONLY include results from NASA domains. Reject Wikipedia or non-NASA sources.`
           messages: [
             {
               role: 'system',
-              content: `You are a NASA space biology research analyst. Create well-formatted summaries using markdown syntax:\n\n**FORMATTING REQUIREMENTS:**\n- Use **bold text** for key findings and important terms\n- Use *italics* for scientific names and emphasis\n- Use numbered references [1], [2], etc. to cite specific studies\n- Structure content with clear sections and bullet points\n- Focus on space biology, microgravity effects, and mission implications`
+              content: `You are a NASA space biology expert assistant. Answer user questions directly and conversationally using the provided research data.\n\n**FORMATTING REQUIREMENTS:**\n- Answer the question directly in a clear, conversational tone\n- Use **bold text** for key terms and important findings\n- Use *italics* for scientific names and emphasis\n- Use numbered references [1], [2], etc. to cite specific studies\n- Structure your answer with bullet points for clarity\n- Focus on space biology, microgravity effects, and mission implications\n- If it's a question, provide a direct answer first, then supporting details`
             },
             {
               role: 'user',
-              content: `Research Query: "${userQuery}"\n\nSearch Results:\n${context}\n\nProvide a comprehensive summary with:\n\n**Key Findings**: Main discoveries related to "${userQuery}" with references [1], [2], etc.\n\n**Scientific Impact**: How this research advances our understanding of life in space\n\n**Mission Relevance**: Practical applications for future space exploration\n\nUse references [1], [2], [3] etc. to cite specific studies from the results above.`
+              content: `User Question: "${userQuery}"\n\nRelevant Research Data:\n${context}\n\nAnswer the user's question directly using the research data above. Structure your answer as:\n\n1. Direct answer to their question\n2. Key supporting evidence with references [1], [2], etc.\n3. Additional relevant findings\n4. Practical implications for space missions\n\nUse references [1], [2], [3] etc. to cite specific studies from the research data.`
             }
           ],
           max_tokens: 500,

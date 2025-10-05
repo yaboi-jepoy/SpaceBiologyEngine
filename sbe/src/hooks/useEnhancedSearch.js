@@ -31,11 +31,20 @@ export function useEnhancedSearch(publications = []) {
 
     const startTime = Date.now();
 
+    // Check if query is a question and show AI loading box IMMEDIATELY
+    const isQuestion = /^(what|why|how|when|where|who|which|can|does|do|is|are|will|would|could|should)\b/i.test(searchQuery.trim()) 
+                      || searchQuery.trim().endsWith('?');
+    
+    if (isQuestion) {
+      console.log('Question detected, showing AI loading box immediately');
+      setAiSummary({ success: true, summary: 'loading', loading: true });
+    }
+
     try {
       // Check cache first
       const cached = contentSearchService.getCached(searchQuery);
       if (cached) {
-        console.log('📦 Using cached results');
+        console.log('Using cached results');
         setResults(cached.results);
         setAiSummary(cached.aiSummary);
         setSearchStats({ ...cached.stats, cached: true });
@@ -94,23 +103,27 @@ export function useEnhancedSearch(publications = []) {
       // Update UI with combined results
       setResults(resultsWithIds);
 
-      // STEP 4: Generate AI summary (optional - may have CORS issues)
-      console.log('🤖 Generating AI summary...');
+      // STEP 4: Generate AI answer (only for questions)
       let hasAISummary = false;
-      
       let aiSummary = null;
-      try {
-        aiSummary = await perplexityService.generateSummary(combinedResults, searchQuery);
-        if (aiSummary?.success) {
-          setAiSummary(aiSummary);
-          hasAISummary = true;
-          console.log('✅ AI summary generated successfully');
-        } else {
-          console.log('ℹ️ AI summary not available');
+      
+      if (isQuestion) {
+        console.log('Generating AI answer for question...');
+        
+        try {
+          aiSummary = await perplexityService.generateSummary(combinedResults, searchQuery);
+          if (aiSummary?.success) {
+            setAiSummary(aiSummary);
+            hasAISummary = true;
+            console.log('AI answer generated successfully');
+          } else {
+            console.log('AI answer not available');
+            setAiSummary(null);
+          }
+        } catch (summaryErr) {
+          console.warn('AI answer failed:', summaryErr.message);
+          setAiSummary(null);
         }
-      } catch (summaryErr) {
-        console.warn('⚠️ AI summary failed (CORS or API issue):', summaryErr.message);
-        // Continue without AI summary
       }
 
       // Cache everything

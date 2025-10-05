@@ -43,7 +43,22 @@ function processMarkdown(text, results = []) {
   return text;
 }
 
-export default function AiBox({title, description, tags, results}) {
+export default function AiBox({title, description, tags, results, loading}) {
+    // Show loading state
+    if (loading || description === 'loading') {
+        return (
+            <div className={"entry-ai-container"}>
+                <h3 className="entry-ai-header">AI Generated Answer</h3>
+                <h2 className="entry-ai-title">{title}</h2>
+                <div className="entry-ai-description">
+                    <p className="ai-loading">
+                        <span className="loading-spinner">⏳</span> Generating AI answer...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className={"entry-ai-container"}>
             <h3 className="entry-ai-header">AI Generated Answer</h3>
