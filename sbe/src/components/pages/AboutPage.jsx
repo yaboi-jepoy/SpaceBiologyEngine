@@ -10,12 +10,12 @@ const AboutPage = ({ theme, setTheme }) => {
         <div className="about-content">
           <div className='about'>
             <h3 className='about-header'>About Us</h3>
-            <h1>Russtronauts</h1>
             <div className="logo-container">
               <img src={TeamLogo} className="team-logo" alt="Russtronauts Logo" />
             </div>
           </div>
           <div className="about-desc">
+            <h1>Russtronauts</h1>
             <h3>
               Silly minds, driving tech forward!
             </h3>

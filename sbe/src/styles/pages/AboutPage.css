@@ -4,85 +4,49 @@
 
 body {
     justify-content: space-around;
-    padding-top: 80px; /* Add padding for navbar */
+    padding-top: 100px; /* Add padding for navbar */
+
 }
 
-.browse-container {
-    display: flex;
-    min-height: 100vh;
-    background: var(--bg-color, #ffffff);
-}
-
-.browse-content {
-    flex: 1;
-    padding: 40px;
-    background: var(--bg-color, #ffffff);
-    color: var(--text-color, #1a1a1a);
-}
-
-.browse-main-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-color, #1a1a1a);
-    margin: 0 0 12px 0;
+.about-header {
+    font-size: 48px;
+    margin: 12px 12px 0 0;
+    padding: 0;
     text-align: center;
 }
 
-.browse-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-color, #666);
-    opacity: 0.7;
+.about-desc {
+    margin-top: 42px;
     text-align: center;
-    margin: 0 0 40px 0;
-    max-width: 600px;
+}
+
+.about-desc p {
     margin-left: auto;
     margin-right: auto;
-}
-
-/* Removed conflicting styles */
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-auto-rows: minmax(250px, auto);
-    gap: 24px;
-    max-width: 1200px;
-    margin: 0 auto;
     padding: 0;
-    align-items: stretch;
+    text-align: justify;
+    width: 800px;
 }
 
-/* Responsive grid adjustments */
-@media (max-width: 768px) {
-    .browse-content {
-        margin-left: 0;
-        padding: 20px;
-    }
-    
-    .browse-main-title {
-        font-size: 2rem;
-    }
-    
-    .browse-subtitle {
-        font-size: 1rem;
-        margin-bottom: 30px;
-    }
-    
-    .categories-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        grid-auto-rows: minmax(220px, auto);
-        gap: 16px;
-    }
+.about-desc h3{
+    font-size: 24px;
+    margin: 12px 12px 0  0;
+    padding-top: 10px;
+    text-align: left;
 }
 
-@media (max-width: 480px) {
-    .browse-content {
-        padding: 16px;
-    }
-    
-    .categories-grid {
-        grid-template-columns: 1fr;
-        grid-auto-rows: auto;
-        gap: 16px;
-    }
+.about-desc h1{
+    font-size: 48px;
+    margin: 0 0 12px 0;
+    padding: 0;
+    text-align: left;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0;
 }
  
