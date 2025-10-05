@@ -1,9 +1,108 @@
+/* Category Card Styling */
+.category-card {
+    background: var(--card-bg-color, #fafafa);
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 250px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: var(--card-shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border-color: var(--text-color, #0066cc);
+    background: var(--hover-bg, #1a1a1a);
+}
+
+.category-card:hover .category-title,
+.category-card:hover .category-desc,
+.category-card:hover .category-icon,
+.category-card:hover .explore-text {
+    color: var(--hover-color, #ffffff);
+}
+
+.category-card:active {
+    transform: translateY(-2px);
+}
+
+.category-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
 .category-title {
-    margin: 0;
+    margin: 0 0 12px 0;
     padding: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-color, #1a1a1a);
+    text-align: center;
 }
 
 .category-desc {
-    margin: 0;
-    padding: 4px 0 18px 0;
+    margin: 0 0 16px 0;
+    padding: 0;
+    color: var(--text-color, #555);
+    opacity: 0.8;
+    line-height: 1.5;
+    font-size: 0.9rem;
+    flex-grow: 1;
+    text-align: center;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+.category-action {
+    margin-top: auto;
+    text-align: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color, #e0e0e0);
+    flex-shrink: 0;
+}
+
+.explore-text {
+    color: var(--text-color, #0066cc);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 4px 0;
+    opacity: 0.9;
+}
+
+.category-card:hover .explore-text {
+    color: inherit;
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .category-card {
+        padding: 16px;
+    }
+    
+    .category-icon {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+    
+    .category-title {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+    
+    .category-desc {
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+    }
 }

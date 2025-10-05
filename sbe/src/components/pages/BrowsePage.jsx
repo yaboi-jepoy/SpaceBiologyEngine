@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../styles/pages/BrowsePage.css';
 import SideBar from '../SideBar';
 import CategoryCard from '../categoryCard';
+import CategoryPopup from '../CategoryPopup';
 
-// categories galing csv
-// what if gawing key-pair value for
-// Title and Links (or title - description - links)
 const categories = [
   'Space Biology',
   'Bone & Skeletal Research',
@@ -20,17 +18,45 @@ const categories = [
 ];
 
 const BrowsePage = ({ theme, setTheme }) => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedCategory(null);
+  };
+
   return (
-      <div className="browse-container">
-        <SideBar theme={theme} setTheme={setTheme} />
+    <div className="browse-container">
+      <SideBar theme={theme} setTheme={setTheme} />
+      <div className="browse-content">
         <h1 className="browse-main-title">Browse Categories</h1>
+        <p className="browse-subtitle">
+          Explore NASA's space biology research organized by scientific discipline
+        </p>
         <div className='categories-grid'>
           {categories.map((category, index) => (
-            <CategoryCard title={category} className={"category-card"}/>
+            <CategoryCard 
+              key={index}
+              title={category} 
+              onClick={handleCategoryClick}
+            />
           ))}
         </div>
-        </div>
+      </div>
+      
+      <CategoryPopup 
+        category={selectedCategory}
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+      />
+    </div>
   );
-}
+};
 
 export default BrowsePage;
