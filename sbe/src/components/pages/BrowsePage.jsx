@@ -5,16 +5,16 @@ import CategoryCard from '../categoryCard';
 import CategoryPopup from '../CategoryPopup';
 
 const categories = [
-  ['Space Biology', 'The study of how living organisms grow and adapt in space environments.'],
-  ['Bone & Skeletal Research', ' Investigation of bone structure, growth, diseases, and repair mechanisms.'],
-  ['Plant Biology', 'The study of plant life, including growth, development, and physiology.'],
-  ['Biomedical Research', 'Research aimed at understanding human health and disease to develop medical treatments.'],
-  ['Bioinformatics', 'The use of computational tools to analyze biological data, especially genetic information.'],
-  ['Cell Biology', 'The study of cell structure, function, and processes.'],
-  ['Genetics & Genomics', 'The study of genes, heredity, and the complete genetic makeup of organisms.'],
-  ['Radiation Biology', 'The examination of the effects of ionizing radiation on living organisms.'],
-  ['Muscle Research', 'The study of muscle function, structure, and diseases.'],
-  ['Stem Cell Research', 'Exploration of stem cells for their potential to regenerate damaged tissues and treat diseases.'],
+  'Space Biology',
+  'Bone & Skeletal Research',
+  'Plant Biology',
+  'Biomedical Research',
+  'Bioinformatics',
+  'Cell Biology',
+  'Genetics & Genomics',
+  'Radiation Biology',
+  'Muscle Research',
+  'Stem Cell Research',
 ];
 
 const BrowsePage = ({ theme, setTheme }) => {
