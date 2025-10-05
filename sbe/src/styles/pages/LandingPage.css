@@ -15,7 +15,8 @@ body {
     justify-content: center;
     text-align: center;
 
-    min-height: 100vh;
+    min-height: 80vh;
+    margin-top: -30%;
     padding: 20px;
     width: 40vw;
 }
@@ -73,8 +74,16 @@ body {
     cursor: pointer;
 }
 
+.searchbar-button:hover {
+    background-color: black;
+    color: white;
+    transition: all 0.3s ease;
+}
+
 .searchbar-button:active {
-    /* arronow what to put here */
+    background-color: #333;
+    color: white;
+    transform: scale(0.98);
 }
 
 /* Responsive Design */

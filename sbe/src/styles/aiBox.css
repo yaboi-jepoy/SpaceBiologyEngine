@@ -52,7 +52,36 @@
 
 .entry-ai-description em {
     font-style: italic;
-    color: var(--text-secondary, #444);
+    color: var(--text-emphasis, #2c5aa0);
+}
+
+/* Section headers */
+.entry-ai-description .summary-section {
+    color: var(--primary-color, #0066cc);
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+    border-bottom: 2px solid var(--border-color, #e0e0e0);
+    padding-bottom: 4px;
+}
+
+/* List items with better spacing */
+.entry-ai-description .list-item {
+    margin: 8px 0;
+    padding-left: 8px;
+    line-height: 1.5;
+}
+
+.entry-ai-description .bullet-item {
+    margin: 6px 0;
+    padding-left: 8px;
+    line-height: 1.5;
+}
+
+/* Paragraph spacing */
+.entry-ai-description p {
+    margin: 12px 0;
+    line-height: 1.6;
 }
 
 /* Scroll target highlighting */

@@ -6,8 +6,11 @@ import SearchBar from '../searchBar';
 import AiBox from '../aiBox';
 import useEnhancedSearch from '../../hooks/useEnhancedSearch';
 import usePublications from '../../hooks/usePublications';
+import blackLogo from '../../assets/app_logos/bioseeker_black.png';
+import whiteLogo from '../../assets/app_logos/bioseeker_white.png';
+import SideBar from '../SideBar';
 
-export default function ResultsPage() {
+const ResultsPage = ({ theme, setTheme }) => {
   const location = useLocation();
   
   // load initial query from navigation
@@ -43,7 +46,13 @@ export default function ResultsPage() {
 
   return (
     <div className="results-container">
+     <SideBar theme={theme} setTheme={setTheme} />
       <div className="results-header">
+        <img
+          src={theme === 'light' ? blackLogo : whiteLogo}
+          className='header-logo'
+          alt='BioSeeker Logo'
+        />
         <SearchBar 
           query={query}
           onQueryChange={setQuery}
@@ -115,3 +124,5 @@ export default function ResultsPage() {
     </div>
   );
 }
+
+export default ResultsPage;

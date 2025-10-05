@@ -5,17 +5,21 @@ import '../styles/aiBox.css';
 function processMarkdown(text, results = []) {
   if (!text) return text;
   
-  // Convert **bold** to <strong>
-  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Convert **bold** to <strong> (more robust pattern)
+  text = text.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
   
-  // Convert *italic* to <em>
-  text = text.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+  // Convert *italic* to <em> (avoid conflicts with bold)
+  text = text.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
   
-  // Convert numbered lists
-  text = text.replace(/^(\d+)\./gm, '<br/><strong>$1.</strong>');
+  // Convert section headers (lines starting with **)
+  text = text.replace(/^\*\*([^*]+?)\*\*:\s*/gm, '<h4 class="summary-section">$1:</h4>');
+  
+  // Convert numbered lists with better spacing
+  text = text.replace(/^(\d+)\.\s+/gm, '<div class="list-item"><strong>$1.</strong> ');
+  text = text.replace(/(<div class="list-item">.*?)(?=\n(?:\d+\.\s+|\n|$))/gs, '$1</div>');
   
   // Convert bullet points
-  text = text.replace(/^[\u2022\-\*]\s+/gm, '<br/>• ');
+  text = text.replace(/^[\u2022\-\*]\s+(.+)/gm, '<div class="bullet-item">• $1</div>');
   
   // Process references [1], [2], etc. and make them scroll to articles within page
   text = text.replace(/\[(\d+)\]/g, (match, num) => {
@@ -27,9 +31,14 @@ function processMarkdown(text, results = []) {
     return `<span class="reference-number">[${num}]</span>`;
   });
   
-  // Add line breaks for better readability
-  text = text.replace(/\n\n/g, '<br/><br/>');
+  // Convert paragraph breaks with proper spacing
+  text = text.replace(/\n\n+/g, '</p><p>');
   text = text.replace(/\n/g, '<br/>');
+  
+  // Wrap in paragraph tags if not already structured
+  if (!text.includes('<p>') && !text.includes('<div>') && !text.includes('<h4>')) {
+    text = '<p>' + text + '</p>';
+  }
   
   return text;
 }
