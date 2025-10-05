@@ -51,10 +51,5 @@ export default function App() {
         </Routes>
       </div>
     </Router>
-    // sample sa app.jsx -jepoyyskzie
-    // sample sa app.jsx - james
-    // another sample ni jepoy
-    // isa pa - jpoy
-    // eto pa isa - james
   )
 }

@@ -81,7 +81,7 @@
 }
 
 .category-card:hover .explore-text {
-    color: inherit;
+    color: var(--hover-color, #ffffff);
     opacity: 1;
 }
 

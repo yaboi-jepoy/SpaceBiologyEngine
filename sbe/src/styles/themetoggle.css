@@ -17,11 +17,25 @@
 
 /* Theme-specific styles */
 body.light {
+  --background-primary: #fff;
+  --background-secondary: #f8f9fa;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666;
+  --hover-bg: #1a1a1a;
+  --hover-color: #fff;
+  /* ...other variables... */
   background-color: #fff;
   color: #1a1a1a;
 }
 
 body.dark {
+  --background-primary: #181a20;
+  --background-secondary: #23262f;
+  --text-primary: #f5f6fa;
+  --text-secondary: #f5f6fa;
+  --hover-bg: #23262f;
+  --hover-color: #4e8cff;
+  /* ...other variables... */
   background-color: #1a1a1a;
   color: #fff;
 }
