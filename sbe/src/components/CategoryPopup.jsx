@@ -58,7 +58,7 @@ const CategoryPopup = ({ category, isOpen, onClose }) => {
     <div className="popup-overlay" onClick={onClose}>
       <div className="popup-content" onClick={(e) => e.stopPropagation()}>
         <div className="popup-header">
-          <h2 className="popup-title">{category} Research</h2>
+          <h2 className="popup-title">{category} Publications</h2>
           <button className="popup-close" onClick={onClose}>&times;</button>
         </div>
         
@@ -73,7 +73,12 @@ const CategoryPopup = ({ category, isOpen, onClose }) => {
                 Found {filteredPublications.length} publications in {category}
               </p>
               {filteredPublications.map((pub, index) => (
-                <div key={index} className="publication-item">
+                <div
+                  key={index}
+                  className="publication-item"
+                  onClick={() => pub.Link && window.open(pub.Link, '_blank')}
+                  style={{ cursor: pub.Link ? 'pointer' : 'default' }}
+                >
                   <h3 className="publication-title">
                     {pub.Link ? (
                       <a href={pub.Link} target="_blank" rel="noopener noreferrer">
@@ -94,8 +99,13 @@ const CategoryPopup = ({ category, isOpen, onClose }) => {
                         📅 {formatDate(pub.Date)}
                       </span>
                     )}
-                    {pub.Category && (
-                      <span className="publication-category">
+                    {/* Always show the main selected category as a tag */}
+                    <span className="publication-category main-category">
+                      🏷️ {category}
+                    </span>
+                    {/* Show other categories/tags if available and different from the main category */}
+                    {pub.Category && pub.Category !== category && (
+                      <span className="publication-category other-category">
                         🏷️ {pub.Category}
                       </span>
                     )}

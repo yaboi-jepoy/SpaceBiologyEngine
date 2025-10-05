@@ -108,7 +108,13 @@ const ResultsPage = ({ theme, setTheme }) => {
         )}
 
         {results.map((entry, index) => (
-          <div key={entry.id || index} id={entry.scrollId || `result-${index}`} className="scroll-target">
+          <div 
+            key={entry.id || index} 
+            id={entry.scrollId || `result-${index}`} 
+            className="scroll-target results-entry-box"
+            onClick={() => entry.link && window.open(entry.link, '_blank')}
+            style={{ cursor: entry.link ? 'pointer' : 'default' }}
+          >
             <SearchEntry 
               title={entry.title}
               description={entry.description}
